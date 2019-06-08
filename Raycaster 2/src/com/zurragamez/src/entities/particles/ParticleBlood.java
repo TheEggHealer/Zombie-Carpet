@@ -10,7 +10,7 @@ public class ParticleBlood extends Particle {
 		velZ = ((random.nextFloat() - 0.5f) * 0.1f) * sprite.height;
 		velX = (random.nextFloat() - 0.5f) * 0.03f;
 		velY = (random.nextFloat() - 0.5f) * 0.03f;
-		bounciness = 0.8f;
+		bounciness = 1f;
 		life = 250 + random.nextInt(100);
 		
 		disableFog = false;

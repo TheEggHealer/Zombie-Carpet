@@ -35,8 +35,8 @@ public class Particle extends EntitySprite {
 			hoverHeight += velZ;
 		}
 		
-		if(hoverHeight > sprite.height * (1f - scale)){
-			hoverHeight = sprite.height * (1f - scale);
+		if(hoverHeight > sprite.height * (2f - scale)){
+			hoverHeight = sprite.height * (2f - scale);
 			velX *= 0.2f;
 			velY *= 0.2f;
 			if(Math.abs(velZ) < 0.1f) {
@@ -45,8 +45,8 @@ public class Particle extends EntitySprite {
 			else velZ *= -bounciness;
 		}
 		
-		if(hoverHeight < -(sprite.height * (1f - scale))){
-			hoverHeight = -(sprite.height * (1f - scale));
+		if(hoverHeight < -(sprite.height * (2f - scale))){
+			hoverHeight = -(sprite.height * (2f - scale));
 			velX *= 0.2f;
 			velY *= 0.2f;
 			velZ *= -bounciness;
@@ -81,7 +81,7 @@ public class Particle extends EntitySprite {
 	
 	public void setSprite(Sprite sprite) {
 		super.setSprite(sprite);
-		gravity = GRAVITY_BASE * sprite.height;
+		gravity = 0;
 	}
 	
 }
