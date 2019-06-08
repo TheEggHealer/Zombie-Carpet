@@ -76,8 +76,8 @@ public class Camera {
 		int[] texture = new int[Main.textureSize*Main.textureSize];
 		
 		float warmR = 1f;
-		float warmG = 0.7f;
-		float warmB = 0.4f;
+		float warmG = 0.6f;
+		float warmB = 0.3f;
 		
 		for(int i = 0; i < walls.size(); i++) {
 			Wall wall = walls.get(i);
