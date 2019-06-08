@@ -8,7 +8,7 @@ public class Zombie extends EntityMonster {
 	private float speed = 0.01f;
 	
 	public Zombie(float x, float y) {
-		super(x, y, 0.6f, true, Sprite.zombie);
+		super(x, y, 0.6f, true, Sprite.object_light);
 		hoverHeight = sprite.height;
 		
 		ai_roam = true;

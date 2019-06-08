@@ -24,6 +24,9 @@ public class Sprite {
 	
 	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/lol.png");
 	
+	//Objects
+	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
+	
 	public Sprite(int width, int height, boolean getPixels, String path) {
 		this.width = width;
 		this.height = height;

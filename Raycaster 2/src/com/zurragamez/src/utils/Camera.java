@@ -76,8 +76,8 @@ public class Camera {
 		int[] texture = new int[Main.textureSize*Main.textureSize];
 		
 		float warmR = 1f;
-		float warmG = 0.6f;
-		float warmB = 0.3f;
+		float warmG = 0.4f;
+		float warmB = 0.0f;
 		
 		for(int i = 0; i < walls.size(); i++) {
 			Wall wall = walls.get(i);
@@ -197,7 +197,10 @@ public class Camera {
 						int texY = (int)(d * e.getSprite().height);
 						
 						Color c = new Color(e.getSprite().pixels[texX + texY * e.getSprite().width]);
-						if(c.getRGB() != 0xffff00ff) main.getPixels()[stripe + y * Main.DRAW_WIDTH] = new Color((int)(c.getRed() * darkness), (int)(c.getGreen() * darkness), (int)(c.getBlue() * darkness)).getRGB();
+						Color prev = new Color(main.getPixels()[stripe + y * Main.DRAW_WIDTH]);
+						float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
+						Color result = new Color((int)((c.getRed() * alpha) * darkness + prev.getRed() * (1f-alpha)), (int)((c.getGreen() * alpha) * darkness + prev.getGreen() * (1f-alpha)), (int)((c.getBlue() * alpha) * darkness + prev.getBlue() * (1f-alpha)));
+						if(c.getRGB() != 0xffff00ff) main.getPixels()[stripe + y * Main.DRAW_WIDTH] = result.getRGB();
 					}
 				}
 			}
