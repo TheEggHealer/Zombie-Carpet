@@ -75,37 +75,49 @@ public class Camera {
 		Color color = Color.white;
 		int[] texture = new int[Main.textureSize*Main.textureSize];
 		
+		float warmR = 1f;
+		float warmG = 0.7f;
+		float warmB = 0.4f;
+		
 		for(int i = 0; i < walls.size(); i++) {
-			Wall r = walls.get(i);
+			Wall wall = walls.get(i);
 			
-			float alpha = clamp(r.height / (float)Main.HEIGHT, 0, 1);
+			float fog = clamp(wall.height / (float)Main.HEIGHT, 0, 1);
+			fog = clamp(fog, 0, 1);
+
+			float lightR = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmR;
+			float lightG = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmG;
+			float lightB = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmB;
 			
-			texture = getTextureFromID(r.id);
+			texture = getTextureFromID(wall.id);
 			
-			int drawStartY = r.y;
+			int drawStartY = wall.y;
 			if(drawStartY < 0) drawStartY = 0;
-			int drawEndY = r.y + r.height;
+			int drawEndY = wall.y + wall.height;
 			if(drawEndY > Main.HEIGHT - 1) drawEndY = Main.HEIGHT - 1;
 			
 			for(int y = drawStartY; y < drawEndY; y++) {
-				if(r.y + y >= Main.HEIGHT) continue;
-				if(r.x >= Main.DRAW_WIDTH) continue;
+				if(wall.y + y >= Main.HEIGHT) continue;
+				if(wall.x >= Main.DRAW_WIDTH) continue;
 				if(y < 0 || y > Main.HEIGHT - 1) continue; 
 				
-				float d = ((float)(y - r.y) / (r.height));
+				float d = ((float)(y - wall.y) / (wall.height));
 				
 				int texY = (int)(d * Main.textureSize);
-				if(r.id == 1 || r.id == 2) {
-					color = new Color(texture[r.textureX + texY * Main.textureSize]);
-					color = new Color((int)(color.getRed() * alpha), (int)(color.getGreen() * alpha), (int)(color.getBlue() * alpha));
+				if(wall.id == 1 || wall.id == 2) {
+					color = new Color(texture[wall.textureX + texY * Main.textureSize]);
+					float r = color.getRed() * lightR * fog;
+					float g = color.getGreen() * lightG * fog;
+					float b = color.getBlue() * lightB * fog;
+					color = new Color((int)r, (int)g, (int)b);
 				}
 				
-				main.getPixels()[(r.x) + (y) * (Main.DRAW_WIDTH)] = color.getRGB();
+				main.getPixels()[(wall.x) + (y) * (Main.DRAW_WIDTH)] = color.getRGB();
 			}
 			
 			
 			float wallDist, playerDist, currentDist;
-			wallDist = r.distance;
+			wallDist = wall.distance;
 			playerDist = 0;
 			
 			if(drawEndY < 0) drawEndY = Main.HEIGHT;  
@@ -113,8 +125,8 @@ public class Camera {
 			for(int y = drawEndY + 1; y < Main.HEIGHT; y++) {
 				currentDist = Main.HEIGHT / (2f * y - Main.HEIGHT);
 				float weight = (currentDist - playerDist) / (wallDist - playerDist);
-				float currentFloorX = weight * r.floorXWall + (1f - weight) * r.dx;
-				float currentFloorY = weight * r.floorYWall + (1f - weight) * r.dy;
+				float currentFloorX = weight * wall.floorXWall + (1f - weight) * wall.dx;
+				float currentFloorY = weight * wall.floorYWall + (1f - weight) * wall.dy;
 				
 				int floorTexX, floorTexY;
 				floorTexX = (int)(currentFloorX * Main.textureSize) % Main.textureSize;
@@ -122,19 +134,29 @@ public class Camera {
 				
 				int floor_id = Main.floor[(int)(currentFloorX)][(int)(currentFloorY)];
 				int roof_id = Main.roof[(int)(currentFloorX)][(int)(currentFloorY)];
+				
 				float fade = ((float)y - Main.HEIGHT * 0.5f) / (Main.HEIGHT * 0.5f);
-				fade *= Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] == 0 ? 1 : Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)];
-				if(fade > 1) fade = 1;
+				fade = clamp(fade, 0, 1);
+				
+				lightR = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmR;
+				lightG = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmG;
+				lightB = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmB;
 				
 				//Draw floor
 				color = new Color(getTextureFromID(floor_id)[floorTexX + floorTexY * Main.textureSize]);
-				color = new Color((int)(color.getRed() * fade), (int)(color.getGreen() * fade), (int)(color.getBlue() * fade));
-				main.getPixels()[r.x + y * Main.DRAW_WIDTH] = color.getRGB();
+				float r = color.getRed() * lightR * fade;
+				float g = color.getGreen() * lightG * fade;
+				float b = color.getBlue() * lightB * fade;
+				color = new Color((int)r, (int)g, (int)b);
+				main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = color.getRGB();
 				
 				//Draw roof
 				color = new Color(getTextureFromID(roof_id)[floorTexX + floorTexY * Main.textureSize]);
-				color = new Color((int)(color.getRed() * fade), (int)(color.getGreen() * fade), (int)(color.getBlue() * fade));
-				main.getPixels()[r.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = color.getRGB();
+				r = color.getRed() * lightR * fade;
+				g = color.getGreen() * lightG * fade;
+				b = color.getBlue() * lightB * fade;
+				color = new Color((int)r, (int)g, (int)b);
+				main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = color.getRGB();
 			}
 		}
 	}

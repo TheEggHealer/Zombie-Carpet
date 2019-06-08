@@ -59,7 +59,7 @@ public class Ray {
 				side = 1;
 			}
 			
-			if(Main.map[cellY][cellX] > 0) hit = 1;
+			if(Main.map[cellX][cellY] > 0) hit = 1;
 		}
 		
 		target = new Point(cellX, cellY);
@@ -97,7 +97,7 @@ public class Ray {
 			floorYWall = cellY + 1;
 		}
 		
-		return new Wall(scanX, Main.HEIGHT / 2 - height / 2, height, Main.map[cellY][cellX], (float)perpWallDist, texX, floorXWall, floorYWall, (float)dx, (float)dy);
+		return new Wall(scanX, Main.HEIGHT / 2 - height / 2, height, Main.map[cellX][cellY], (float)perpWallDist, texX, floorXWall, floorYWall, (float)dx, (float)dy, (float)(dy + perpWallDist * dirY * 0.99f), (float)(dx + perpWallDist * dirX * 0.99f));
 	}
 	
 	public void draw(Graphics2D g) {

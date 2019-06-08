@@ -8,9 +8,9 @@ public class Wall {
 	public int textureX;
 	public float distance;
 	public float floorXWall, floorYWall;
-	public float dx, dy;
+	public float dx, dy, hitX, hitY;
 	
-	public Wall(int x, int y, int height, int id, float distance, int textureX, float floorXWall, float floorYWall, float dx, float dy) {
+	public Wall(int x, int y, int height, int id, float distance, int textureX, float floorXWall, float floorYWall, float dx, float dy, float hitX, float hitY) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
@@ -21,6 +21,8 @@ public class Wall {
 		this.floorYWall = floorYWall;
 		this.dx = dx;
 		this.dy = dy;
+		this.hitX = hitX;
+		this.hitY = hitY;
 	}
 	
 }

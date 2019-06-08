@@ -97,7 +97,7 @@ public class Player {
 	 * @return True if collision, else False
 	 */
 	protected boolean checkCollision(float x, float y) {
-		return Main.map[(int)y][(int)x] != 0;
+		return Main.map[(int)x][(int)y] != 0;
 	}
 	
 	

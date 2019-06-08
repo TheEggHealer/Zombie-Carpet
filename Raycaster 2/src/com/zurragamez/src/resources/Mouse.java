@@ -24,6 +24,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	public Mouse() {
 		try {
 			mouse = new Robot();
+			mouse.mouseMove(screen.width / 2, screen.height / 2);
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}

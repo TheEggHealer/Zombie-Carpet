@@ -78,9 +78,9 @@ public class Main extends Canvas implements Runnable {
 		AudioMaster.init();
 		
 		try {
-			map = loadMap("map.txt");
-			floor = loadMap("floor.txt");
-			roof = loadMap("roof.txt");
+			map = loadMap("maps/sus_walls.txt");
+			floor = loadMap("maps/sus_floor.txt");
+			roof = loadMap("maps/sus_roof.txt");
 			
 			brightness = loadBrightness();
 		} catch (IOException e) {
@@ -89,7 +89,7 @@ public class Main extends Canvas implements Runnable {
 		}
 		
 		this.camera = new Camera(this);
-		this.player = new Player(this, camera, 1.5f, 2.5f);
+		this.player = new Player(this, camera, 1.5f, 1.5f);
 		
 		for(int i = 0; i < 20; i++) {
 			boolean hasSpawn = false;
@@ -132,7 +132,7 @@ public class Main extends Canvas implements Runnable {
 		int width, height;
 		
 		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader("res/brightness.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("res/maps/sus_brightness.txt"));
 		String line = br.readLine();
 		int index = 0;
 		
