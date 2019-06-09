@@ -32,11 +32,11 @@ public class Projectile extends EntitySprite {
 		
 		hoverHeight -= heightChange;
 		
-		if(x < 0 || x > Main.mapWidth-1 || y < 0 || y > Main.mapHeight-1) remove = true;
+		if(x < 0 || x > Main.mapHeight-1 || y < 0 || y > Main.mapWidth-1) remove = true;
 
 		if(Main.map[(int)(x)][(int)(y)] != 0) {
 			for(int i = 0; i < 1; i++) {
-				main.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), Main.map[(int)(y)][(int)(x)]));
+				main.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), Main.map[(int)(x)][(int)(y)]));
 			}
 			remove = true;
 		}

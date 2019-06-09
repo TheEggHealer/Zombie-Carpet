@@ -83,8 +83,9 @@ public class Camera {
 			Wall wall = walls.get(i);
 			
 			float fog = clamp(wall.height / (float)Main.HEIGHT, 0, 1);
+			fog *= (1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * 3);
 			fog = clamp(fog, 0, 1);
-
+			
 			float lightR = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmR;
 			float lightG = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmG;
 			float lightB = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmB;
@@ -136,6 +137,7 @@ public class Camera {
 				int roof_id = Main.roof[(int)(currentFloorX)][(int)(currentFloorY)];
 				
 				float fade = ((float)y - Main.HEIGHT * 0.5f) / (Main.HEIGHT * 0.5f);
+				fade *= (1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * 3);
 				fade = clamp(fade, 0, 1);
 				
 				lightR = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmR;
