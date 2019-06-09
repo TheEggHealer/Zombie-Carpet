@@ -45,7 +45,7 @@ public class Main extends Canvas implements Runnable {
 	private List<EntitySprite> entities = new ArrayList<>();
 	
 	public static int textureSize = 64;
-	public static int mapWidth = 20, mapHeight = 20;
+	public static int mapWidth = 40, mapHeight = 20;
 	
 	public static int[][] map;
 	public static int[][] floor, roof;
@@ -53,7 +53,7 @@ public class Main extends Canvas implements Runnable {
 	
 	private SpriteComparator comparator;
 	
-	public static int res = 5;
+	public static int res = 5; // 5
 	public static final int DRAW_WIDTH = Main.WIDTH / res;
 	private BufferedImage screen = new BufferedImage(DRAW_WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) screen.getRaster().getDataBuffer()).getData();
@@ -81,6 +81,7 @@ public class Main extends Canvas implements Runnable {
 			map = loadMap("maps/sus_walls.txt");
 			floor = loadMap("maps/sus_floor.txt");
 			roof = loadMap("maps/sus_roof.txt");
+			loadEntities("maps/sus_entities.txt");
 			
 			brightness = loadBrightness();
 		} catch (IOException e) {
@@ -91,16 +92,16 @@ public class Main extends Canvas implements Runnable {
 		this.camera = new Camera(this);
 		this.player = new Player(this, camera, 1.5f, 1.5f);
 		
-		for(int i = 0; i < 20; i++) {
-			boolean hasSpawn = false;
-			int x=0, y=0;
-			while(!hasSpawn) {
-				x = random.nextInt(mapWidth);
-				y = random.nextInt(mapHeight);
-				if(map[y][x] == 0) hasSpawn = true;
-			} 
-			addEntity(new Zombie((x + 0.5f), (y + 0.5f)));
-		}
+//		for(int i = 0; i < 20; i++) {
+//			boolean hasSpawn = false;
+//			int x=0, y=0;
+//			while(!hasSpawn) {
+//				x = random.nextInt(mapWidth);
+//				y = random.nextInt(mapHeight);
+//				if(map[y][x] == 0) hasSpawn = true;
+//			} 
+//			addEntity(new Zombie((x + 0.5f), (y + 0.5f)));
+//		}
 		comparator = new SpriteComparator();
 		comparator.player = player;
 	}
@@ -162,7 +163,7 @@ public class Main extends Canvas implements Runnable {
 	 * @throws IOException In case the file does not exist.
 	 */
 	public int[][] loadMap(String file) throws IOException {
-		int[][] map = new int[mapHeight][mapWidth];
+		int[][] map = new int[mapWidth][mapHeight];
 		int width, height;
 		
 		@SuppressWarnings("resource")
@@ -174,12 +175,14 @@ public class Main extends Canvas implements Runnable {
 	    	if(index > 0) {
 	        String[] cells = line.split(",");
 		        for(int i = 0; i < cells.length; i++) {
+		        	System.out.println(i + ", " + (index - 1));
 		        	map[i][index - 1] = Integer.parseInt(cells[i]);
 		        }
 	    	} else {
 	    		String[] size = line.split(",");
 	    		width = Integer.parseInt(size[0]);
 	    		height = Integer.parseInt(size[1]);
+	    		System.out.println(width + ", " + height);
 	    		map = new int[height][width];
 	    	}
 	    	index++;
@@ -187,6 +190,27 @@ public class Main extends Canvas implements Runnable {
 	    }
 		
 		return map;
+	}
+	
+	public void loadEntities(String file) throws IOException {
+		@SuppressWarnings("resource")
+		BufferedReader br = new BufferedReader(new FileReader("res/" + file));
+		String line = br.readLine();
+		
+		while (line != null) {
+			System.out.println(line);
+	    	String data[] = line.split(",");
+	    	int id = Integer.parseInt(data[0]);
+	    	float x = Float.parseFloat(data[1]);
+	    	float y = Float.parseFloat(data[2]);
+	    	
+	    	if(id == 1) {
+	    		addEntity(new Zombie(y, x));
+	    	} else if(id == 2) {
+	    		addEntity(new Zombie(y, x)); 
+	    	}
+	        line = br.readLine();
+	    }
 	}
 	
 	public void update() {
