@@ -71,8 +71,10 @@ public class Player {
 			}
 		}
 		
-		if(Mouse.dx != 0) {
-			float rotation = Mouse.dx * -0.03f;
+		Mouse.update();
+		if(Mouse.finalRotation != 0) {
+			System.out.println(Mouse.finalRotation);
+			float rotation = Mouse.finalRotation * -0.03f;
 			camera.rotate(rotation);
 			dir += rotation;
 

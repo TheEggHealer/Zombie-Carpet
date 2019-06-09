@@ -56,7 +56,7 @@ public class Particle extends EntitySprite {
 	}
 	
 	public void checkCollision() {
-		if(Main.map[(int)(y)][(int)(x)] != 0) {
+		if(Main.map[(int)(x)][(int)(y)] != 0) {
 			float dx = x - (int)x;
 			float dy = y - (int)y;
 			float ax = 1 - dx;

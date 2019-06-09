@@ -106,9 +106,9 @@ public class Camera {
 				int texY = (int)(d * Main.textureSize);
 				if(wall.id == 1 || wall.id == 2) {
 					color = new Color(texture[wall.textureX + texY * Main.textureSize]);
-					float r = color.getRed() * lightR * fog;
-					float g = color.getGreen() * lightG * fog;
-					float b = color.getBlue() * lightB * fog;
+					float r = clamp(color.getRed() * lightR * fog, 0, 255);
+					float g = clamp(color.getGreen() * lightG * fog, 0, 255);
+					float b = clamp(color.getBlue() * lightB * fog, 0, 255);
 					color = new Color((int)r, (int)g, (int)b);
 				}
 				
@@ -144,17 +144,17 @@ public class Camera {
 				
 				//Draw floor
 				color = new Color(getTextureFromID(floor_id)[floorTexX + floorTexY * Main.textureSize]);
-				float r = color.getRed() * lightR * fade;
-				float g = color.getGreen() * lightG * fade;
-				float b = color.getBlue() * lightB * fade;
+				float r = clamp(color.getRed() * lightR * fade, 0, 255);
+				float g = clamp(color.getGreen() * lightG * fade, 0, 255);
+				float b = clamp(color.getBlue() * lightB * fade, 0, 255);
 				color = new Color((int)r, (int)g, (int)b);
 				main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = color.getRGB();
 				
 				//Draw roof
 				color = new Color(getTextureFromID(roof_id)[floorTexX + floorTexY * Main.textureSize]);
-				r = color.getRed() * lightR * fade;
-				g = color.getGreen() * lightG * fade;
-				b = color.getBlue() * lightB * fade;
+				r = clamp(color.getRed() * lightR * fade, 0, 255);
+				g = clamp(color.getGreen() * lightG * fade, 0, 255);
+				b = clamp(color.getBlue() * lightB * fade, 0, 255);
 				color = new Color((int)r, (int)g, (int)b);
 				main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = color.getRGB();
 			}
@@ -162,6 +162,10 @@ public class Camera {
 	}
 	
 	public void drawEntity(EntitySprite e) {
+		float warmR = 1f;
+		float warmG = 0.4f;
+		float warmB = 0.0f;
+		
 		float spriteX = e.getX() - y;
 		float spriteY = e.getY() - x;
 		float invDet = (float) (1.0 / (planeX * dirX - dirY * planeY));
@@ -188,6 +192,10 @@ public class Camera {
 		else if(darkness > 1) darkness = 1;
 		if(e.disableFog) darkness = 1;
 		
+		float lightR = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmR;
+		float lightG = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmG;
+		float lightB = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmB;
+		
 		for(int stripe = drawStartX; stripe < drawEndX; stripe++) {
 			if(spriteScreenX > 0 && spriteScreenX < Main.DRAW_WIDTH) {
 				int texX = (int)((stripe - (spriteScreenX - spriteWidth / 2)) / (float)spriteWidth * e.getSprite().width);
@@ -199,7 +207,14 @@ public class Camera {
 						Color c = new Color(e.getSprite().pixels[texX + texY * e.getSprite().width]);
 						Color prev = new Color(main.getPixels()[stripe + y * Main.DRAW_WIDTH]);
 						float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
-						Color result = new Color((int)((c.getRed() * alpha) * darkness + prev.getRed() * (1f-alpha)), (int)((c.getGreen() * alpha) * darkness + prev.getGreen() * (1f-alpha)), (int)((c.getBlue() * alpha) * darkness + prev.getBlue() * (1f-alpha)));
+						
+						//		  New color										Color behind alpha
+						float r = clamp((c.getRed() * alpha) * darkness * lightR		+ 		prev.getRed() * (1f-alpha), 0, 255);
+						float g = clamp((c.getGreen() * alpha) * darkness * lightG	+ 		prev.getGreen() * (1f-alpha), 0, 255);
+						float b = clamp((c.getBlue() * alpha) * darkness * lightB		+ 		prev.getBlue() * (1f-alpha), 0, 255);
+//						System.out.println(c.getRed() + ", " + alpha + ", " + darkness + ", " + lightR);
+						
+						Color result = new Color((int)r, (int)g, (int)b);
 						if(c.getRGB() != 0xffff00ff) main.getPixels()[stripe + y * Main.DRAW_WIDTH] = result.getRGB();
 					}
 				}

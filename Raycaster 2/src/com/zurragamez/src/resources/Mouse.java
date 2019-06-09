@@ -8,6 +8,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.zurragamez.src.Main;
 
@@ -17,9 +19,13 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	public static boolean pressing;
 	public static int wheel;
 	public static int dx;
+	public static float finalRotation;
 	
 	private Robot mouse;
 	private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	
+	private static final int MOUSE_SMOOTHING = 5;
+	private static List<Integer> pastMovement = new ArrayList<Integer>();
 	
 	public Mouse() {
 		try {
@@ -30,11 +36,28 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		}
 	}
 	
+	public static void update() {
+		pastMovement.add(0);
+		if(pastMovement.size() > 0) {
+			int total = 0;
+			for(int i = 0; i < pastMovement.size() - 3; i++) {
+				total += pastMovement.get(i);
+			}
+			finalRotation = (float)total / pastMovement.size();
+			if(pastMovement.size() > MOUSE_SMOOTHING) {
+				for(int i = 0; i < pastMovement.size() - MOUSE_SMOOTHING; i++) {
+					pastMovement.remove(i);
+				}
+			}
+		}
+	}
+	
 	public void mouseDragged(MouseEvent e) {
 		x = e.getXOnScreen();
 		y = e.getY();
 		if(x != screen.width / 2) {
 			dx = e.getXOnScreen() - screen.width / 2;
+			pastMovement.add(dx);
 			if(Main.useMouseMovement) mouse.mouseMove(screen.width / 2, screen.height / 2);
 		}
 	}
@@ -44,6 +67,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		y = e.getY();
 		if(x != screen.width / 2) {
 			dx = e.getXOnScreen() - screen.width / 2;
+			pastMovement.add(dx);
 			if(Main.useMouseMovement) mouse.mouseMove(screen.width / 2, screen.height / 2);
 		}
 	}
