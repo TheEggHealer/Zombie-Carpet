@@ -82,8 +82,8 @@ public class Camera {
 		for(int i = 0; i < walls.size(); i++) {
 			Wall wall = walls.get(i);
 			
-			float fog = clamp(wall.height / (float)Main.HEIGHT, 0, 1);
-			fog *= (1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * 3);
+			float fog = clamp(wall.height * 0.5f / (float)Main.HEIGHT, 0, 1);
+			fog *= (1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * 6);
 			fog = clamp(fog, 0, 1);
 			
 			float lightR = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmR;
