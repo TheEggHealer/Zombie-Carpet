@@ -10,7 +10,9 @@ import com.zurragamez.src.resources.Sprite;
 public class Light extends EntitySprite {
 
 	protected int lightRadius;
-	protected int rays = 80;
+	protected int rays = 200;
+	protected int blurRadius = 3;
+	protected float brightness = 1;
 
 	protected List<Integer> affectedTiles = new ArrayList<Integer>();
 	
@@ -22,6 +24,7 @@ public class Light extends EntitySprite {
 	}
 	
 	public void setupLight() {
+		affectedTiles.clear();
 		float dir = 0;
 		for(int i = 0; i < rays; i++) {
 			dir = (float)((Math.PI * 2) / rays) * i; 
@@ -38,9 +41,9 @@ public class Light extends EntitySprite {
 				if(!affectedTiles.contains(tilePosXY)) {
 					float distanceToTile = (float)Math.abs(Math.sqrt(((tilePosX) - x) * ((tilePosX) - x) + ((tilePosY) - y) * ((tilePosY) - y)));
 					
-					Main.brightness[tilePosX][tilePosY] += (1f - ((float)distanceToTile / lightRadius));
-					for(int y = -2; y <= 2; y++) {
-						for(int x = -2; x <= 2; x++) {
+					Main.brightness[tilePosX][tilePosY] += (1f - ((float)distanceToTile / lightRadius)) * brightness;
+					for(int y = -blurRadius; y <= blurRadius; y++) {
+						for(int x = -blurRadius; x <= blurRadius; x++) {
 							if(x == 0 && y == 0) continue;
 							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > Main.mapHeight - 1 || tilePosY + y > Main.mapWidth - 1) continue;
 							float d = (float)Math.abs(Math.sqrt(x * x + y * y)) * 2;

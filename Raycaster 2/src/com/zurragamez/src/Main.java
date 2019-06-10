@@ -105,7 +105,7 @@ public class Main extends Canvas implements Runnable {
 //		}
 		
 //		addEntity(new LightStandingTorch(3.5f, 3.5f));
-		addEntity(new LightStandingTorch(5.5f, 3.5f));
+//		addEntity(new LightStandingTorch(5.5f, 3.5f));
 		
 		comparator = new SpriteComparator();
 		comparator.player = player;
@@ -211,7 +211,7 @@ public class Main extends Canvas implements Runnable {
 	    	if(id == 1) {
 	    		addEntity(new Zombie(y, x));
 	    	} else if(id == 2) {
-//	    		addEntity(new LightStandingTorch(y, x)); 
+	    		addEntity(new LightStandingTorch(y, x)); 
 	    	}
 	        line = br.readLine();
 	    }
