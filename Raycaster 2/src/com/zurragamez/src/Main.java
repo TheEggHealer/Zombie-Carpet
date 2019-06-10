@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.entities.Zombie;
+import com.zurragamez.src.entities.objects.lights.LightStandingTorch;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
 import com.zurragamez.src.resources.audio.AudioMaster;
@@ -81,9 +82,9 @@ public class Main extends Canvas implements Runnable {
 			map = loadMap("maps/sus_walls.txt");
 			floor = loadMap("maps/sus_floor.txt");
 			roof = loadMap("maps/sus_roof.txt");
+			brightness = loadBrightness();
 			loadEntities("maps/sus_entities.txt");
 			
-			brightness = loadBrightness();
 		} catch (IOException e) {
 			System.err.println("Failed to load map");
 			e.printStackTrace();
@@ -102,6 +103,10 @@ public class Main extends Canvas implements Runnable {
 //			} 
 //			addEntity(new Zombie((x + 0.5f), (y + 0.5f)));
 //		}
+		
+//		addEntity(new LightStandingTorch(3.5f, 3.5f));
+		addEntity(new LightStandingTorch(5.5f, 3.5f));
+		
 		comparator = new SpriteComparator();
 		comparator.player = player;
 	}
@@ -198,7 +203,6 @@ public class Main extends Canvas implements Runnable {
 		String line = br.readLine();
 		
 		while (line != null) {
-			System.out.println(line);
 	    	String data[] = line.split(",");
 	    	int id = Integer.parseInt(data[0]);
 	    	float x = Float.parseFloat(data[1]);
@@ -207,13 +211,19 @@ public class Main extends Canvas implements Runnable {
 	    	if(id == 1) {
 	    		addEntity(new Zombie(y, x));
 	    	} else if(id == 2) {
-	    		addEntity(new Zombie(y, x)); 
+//	    		addEntity(new LightStandingTorch(y, x)); 
 	    	}
 	        line = br.readLine();
 	    }
 	}
 	
 	public void update() {
+ 		for(int y = 0; y < mapWidth; y++) {
+ 			for(int x = 0; x < mapHeight; x++) {
+ 				brightness[x][y] = 0;
+ 			}
+ 		}
+		
 		if(Keyboard.esc) {
 			exit();
 		}

@@ -88,6 +88,7 @@ public class Player {
 			dir -= rotSpeed;
 		}
 		
+		//TODO: Figure out x & y
 		camera.setLocation(y, x);
 	}
 	
