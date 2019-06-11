@@ -23,7 +23,7 @@ public class Sprite {
 	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
 	public static Sprite wall_wood = new Sprite(64, 64, true, "/walls/planks01.png");
 	
-	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/lol.png");
+	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
 	
 	//Objects
 	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
