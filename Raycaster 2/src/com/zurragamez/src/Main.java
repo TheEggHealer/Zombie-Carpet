@@ -17,6 +17,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import com.zurragamez.src.entities.EntitySound;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.entities.Zombie;
 import com.zurragamez.src.entities.objects.lights.LightStandingTorch;
@@ -43,6 +44,7 @@ public class Main extends Canvas implements Runnable {
 	private Camera camera;
 	
 	private List<EntitySprite> entities = new ArrayList<>();
+	private List<EntitySound> entitySounds = new ArrayList<>(); 
 	
 	public static int textureSize = 64;
 	public static int mapHeight = 40, mapWidth = 20;
@@ -76,6 +78,7 @@ public class Main extends Canvas implements Runnable {
 		addMouseWheelListener(new Mouse());
 			
 		AudioMaster.init();
+		AudioMaster.loadSounds();
 		
 		try {
 			map = loadMap("maps/sus_walls.txt");
@@ -225,6 +228,12 @@ public class Main extends Canvas implements Runnable {
 			if(e.isRemoved()) entities.remove(i);
 		}
 		
+		for(int i = 0; i < entitySounds.size(); i++) {
+			EntitySound e = entitySounds.get(i);
+			e.update();
+			if(e.remove) entitySounds.remove(i);
+		}
+		
 		entities.sort(comparator);
 		Mouse.dx = 0;
 		AudioMaster.setListenerData(player);
@@ -237,6 +246,10 @@ public class Main extends Canvas implements Runnable {
 	public void addEntity(EntitySprite e) {
 		e.init(this);
 		entities.add(e);
+	}
+	
+	public void addSound(EntitySound e) {
+		entitySounds.add(e);
 	}
 	
 	/**
