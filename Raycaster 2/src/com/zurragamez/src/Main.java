@@ -81,11 +81,11 @@ public class Main extends Canvas implements Runnable {
 		AudioMaster.loadSounds();
 		
 		try {
-			map = loadMap("maps/sus_walls.txt");
-			floor = loadMap("maps/sus_floor.txt");
-			roof = loadMap("maps/sus_roof.txt");
+			map = loadMap("maps/sis_walls.txt");
+			floor = loadMap("maps/sis_floor.txt");
+			roof = loadMap("maps/sis_roof.txt");
 			brightness = loadBrightness();
-			loadEntities("maps/sus_entities.txt");
+			loadEntities("maps/sis_entities.txt");
 			
 		} catch (IOException e) {
 			System.err.println("Failed to load map");
@@ -129,7 +129,7 @@ public class Main extends Canvas implements Runnable {
 		int width, height;
 		
 		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader("res/maps/sus_brightness.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("res/maps/sis_brightness.txt"));
 		String line = br.readLine();
 		int index = 0;
 		
