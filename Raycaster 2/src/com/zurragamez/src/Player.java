@@ -1,7 +1,11 @@
 package com.zurragamez.src;
+import java.util.Random;
+
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
 import com.zurragamez.src.resources.Sprite;
+import com.zurragamez.src.resources.audio.AudioMaster;
+import com.zurragamez.src.resources.audio.Source;
 import com.zurragamez.src.utils.Camera;
 
 public class Player {
@@ -9,11 +13,17 @@ public class Player {
 	public float x, y;
 	public float dir;
 	
-	private float speed = 0.06f;
+	private float speed = 0.03f;
 	private float rotSpeed = 0.04f;
 	
 	private Main main;
 	private Camera camera;
+	
+	private int sound_walk1, sound_walk2;
+	private int walkCooldown = 10;
+	private Source walkingSource;
+	
+	private Random random = new Random();
 	
 	public Player(Main main, Camera camera, float x, float y) {
 		this.x = y;
@@ -21,6 +31,11 @@ public class Player {
 		
 		this.main = main;
 		this.camera = camera;
+		
+		walkingSource = new Source();
+		walkingSource.setLocation(x, y);
+		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
+		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
 	}
 	
 	public void update() {
@@ -58,16 +73,23 @@ public class Player {
 			dy += Math.sin(dir - Math.PI / 2) * speed;
 		}
 		
-		if(!checkCollision(x + dx, y + dy)) {
-			this.x += dx;
-			this.y += dy;
-		} else {
-			if(!checkCollision(x + dx, y)) {
+		if(!(dx == 0 && dy == 0)) {
+			if(!checkCollision(x + dx, y + dy)) {
 				this.x += dx;
-			} 
-			
-			if(!checkCollision(x, y + dy)) {
 				this.y += dy;
+			} else {
+				if(!checkCollision(x + dx, y)) {
+					this.x += dx;
+				} 
+				if(!checkCollision(x, y + dy)) {
+					this.y += dy;
+				}
+			}
+			walkingSource.setLocation(x, y);
+			if(--walkCooldown <= 0) {
+				walkCooldown = 25;
+				walkingSource.setPitch(1.1f - random.nextFloat() * 0.2f);
+				walkingSource.play(random.nextInt(2) == 1 ? sound_walk1 : sound_walk2);
 			}
 		}
 		

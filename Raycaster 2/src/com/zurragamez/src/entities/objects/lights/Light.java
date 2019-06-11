@@ -33,9 +33,9 @@ public class Light extends EntitySprite {
 			for(int dist = 0; dist < lightRadius; dist++) {
 				int tilePosX = (int)(x + dx * dist);
 				int tilePosY = (int)(y + dy * dist);
-				int tilePosXY = tilePosX + tilePosY * Main.mapWidth;
+				int tilePosXY = tilePosX + tilePosY * Main.mapHeight;
 				
-				if(tilePosX < 0 || tilePosY < 0 || tilePosX > Main.mapHeight - 1 || tilePosY > Main.mapWidth - 1) break;
+				if(tilePosX < 0 || tilePosY < 0 || tilePosX > Main.mapWidth - 1 || tilePosY > Main.mapHeight - 1) break;
 				if(Main.map[tilePosX][tilePosY] != 0) break;
 				
 				if(!affectedTiles.contains(tilePosXY)) {
@@ -45,7 +45,7 @@ public class Light extends EntitySprite {
 					for(int y = -blurRadius; y <= blurRadius; y++) {
 						for(int x = -blurRadius; x <= blurRadius; x++) {
 							if(x == 0 && y == 0) continue;
-							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > Main.mapHeight - 1 || tilePosY + y > Main.mapWidth - 1) continue;
+							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > Main.mapWidth - 1 || tilePosY + y > Main.mapHeight - 1) continue;
 							float d = (float)Math.abs(Math.sqrt(x * x + y * y)) * 3;
 							if(Main.brightness[tilePosX + x][tilePosY + y] < Main.brightness[tilePosX][tilePosY] / d) Main.brightness[tilePosX + x][tilePosY + y] = Main.brightness[tilePosX][tilePosY] / d;
 						}

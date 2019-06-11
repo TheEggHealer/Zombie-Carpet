@@ -45,7 +45,7 @@ public class Main extends Canvas implements Runnable {
 	private List<EntitySprite> entities = new ArrayList<>();
 	
 	public static int textureSize = 64;
-	public static int mapWidth = 40, mapHeight = 20;
+	public static int mapHeight = 40, mapWidth = 20;
 	
 	public static int[][] map;
 	public static int[][] floor, roof;
@@ -82,7 +82,7 @@ public class Main extends Canvas implements Runnable {
 			floor = loadMap("maps/sus_floor.txt");
 			roof = loadMap("maps/sus_roof.txt");
 			brightness = loadBrightness();
-			loadEntities("maps/sus_entities.txt");
+//			loadEntities("maps/sus_entities.txt");
 			
 		} catch (IOException e) {
 			System.err.println("Failed to load map");
@@ -91,6 +91,8 @@ public class Main extends Canvas implements Runnable {
 		
 		this.camera = new Camera(this);
 		this.player = new Player(this, camera, 1.5f, 1.5f);
+		
+		addEntity(new LightStandingTorch(3.5f, 3.5f));
 		
 		comparator = new SpriteComparator();
 		comparator.player = player;
@@ -119,7 +121,7 @@ public class Main extends Canvas implements Runnable {
 	 * @throws IOException In case the file does not exist.
 	 */
 	public float[][] loadBrightness() throws IOException {
-		float[][] map = new float[mapWidth][mapHeight];
+		float[][] map = new float[mapHeight][mapWidth];
 		int width, height;
 		
 		@SuppressWarnings("resource")
@@ -153,7 +155,7 @@ public class Main extends Canvas implements Runnable {
 	 * @throws IOException In case the file does not exist.
 	 */
 	public int[][] loadMap(String file) throws IOException {
-		int[][] map = new int[mapWidth][mapHeight];
+		int[][] map = new int[mapHeight][mapWidth];
 		int width, height;
 		
 		@SuppressWarnings("resource")
@@ -203,8 +205,8 @@ public class Main extends Canvas implements Runnable {
 	}
 	
 	public void update() {
- 		for(int y = 0; y < mapWidth; y++) {
- 			for(int x = 0; x < mapHeight; x++) {
+ 		for(int y = 0; y < mapHeight; y++) {
+ 			for(int x = 0; x < mapWidth; x++) {
  				brightness[x][y] = 0;
  			}
  		}

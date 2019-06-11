@@ -112,7 +112,7 @@ public class EntitySprite {
 	
 	protected float distanceToPlayer() {
 		Player p = main.getPlayer();
-		return (float)Math.abs((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y));
+		return (float)Math.abs(Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)));
 	}
 	
 	public float getX() {
