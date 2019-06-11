@@ -35,6 +35,7 @@ import com.zurragamez.src.Player;
 
 public class AudioMaster {
 	
+	public static int sus;
 	private static long device;
 	private static long context;
 	private static ALCCapabilities alcCapabilities;
@@ -74,6 +75,10 @@ public class AudioMaster {
 		orientation.put(5, 1);
 		AL10.alListenerfv(AL10.AL_ORIENTATION, orientation);
 		AL10.alListener3f(AL10.AL_POSITION, player.x, player.y, 0);
+	}
+	
+	public static void loadSounds() {
+		sus = AudioMaster.loadSound("res/sounds/other/flame_01.ogg");
 	}
 	
 	public static int loadSound(String path) {

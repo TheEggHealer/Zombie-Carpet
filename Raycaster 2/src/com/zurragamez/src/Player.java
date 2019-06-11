@@ -19,9 +19,10 @@ public class Player {
 	private Main main;
 	private Camera camera;
 	
-	private int sound_walk1, sound_walk2;
+	private int sound_walk1, sound_walk2, sound_shoot1;
 	private int walkCooldown = 10;
 	private Source walkingSource;
+	private Source shootingSource;
 	
 	private Random random = new Random();
 	
@@ -34,16 +35,23 @@ public class Player {
 		
 		walkingSource = new Source();
 		walkingSource.setLocation(x, y);
+		shootingSource = new Source();
+		shootingSource.setLocation(x, y);
 		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
 		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
+		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
+		
 	}
 	
 	public void update() {
 		movement();
 		
 		if(Keyboard.shoot || Mouse.button == 1) {
-			Keyboard.shoot = false;
+			//Keyboard.shoot = false;
 			Mouse.button = 0;
+			
+			shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
+			shootingSource.play(sound_shoot1);
 			
 			main.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
 		}
@@ -95,6 +103,8 @@ public class Player {
 				walkingSource.play(random.nextInt(2) == 1 ? sound_walk1 : sound_walk2);
 			}
 		}
+		
+		shootingSource.setLocation(x,y);
 		
 		Mouse.update();
 		if(Mouse.finalRotation != 0) {
