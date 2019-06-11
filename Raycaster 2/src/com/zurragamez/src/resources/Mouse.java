@@ -27,6 +27,8 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	private static final int MOUSE_SMOOTHING = 5;
 	private static List<Integer> pastMovement = new ArrayList<Integer>();
 	
+	private int monitor = 0;
+	
 	public Mouse() {
 		try {
 			mouse = new Robot();
@@ -63,12 +65,24 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	}
 
 	public void mouseMoved(MouseEvent e) {
+		if(e.getXOnScreen() < 0) monitor = -1;
+		else if(e.getXOnScreen() > screen.width) monitor = 1; 
+		else monitor = 0;
+		
 		x = e.getXOnScreen();
 		y = e.getY();
 		if(x != screen.width / 2) {
-			dx = e.getXOnScreen() - screen.width / 2;
+			if(monitor == 0) dx = e.getXOnScreen() - screen.width / 2;
+			else if(monitor == 1) dx = (e.getXOnScreen() - screen.width) - screen.width / 2;
+			else dx = (e.getXOnScreen() + screen.width) - screen.width / 2;
+			
 			pastMovement.add(dx);
-			if(Main.useMouseMovement) mouse.mouseMove(screen.width / 2, screen.height / 2);
+			
+			if(Main.useMouseMovement) {
+				if(monitor == 0) mouse.mouseMove(screen.width / 2, screen.height / 2);
+				else if(monitor == 1) mouse.mouseMove(screen.width + screen.width / 2, screen.height / 2);
+				else mouse.mouseMove(-screen.width / 2, screen.height / 2);
+			}
 		}
 	}
 

@@ -29,8 +29,8 @@ public class Main extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	private  JFrame frame;
-	public static final int WIDTH = (int)(1920 / 1f);
-	public static final int HEIGHT = (int)(1080 / 1f);
+	public static final int WIDTH = (int)(1920 / 1.5f);
+	public static final int HEIGHT = (int)(1080 / 1.5f);
 	private static final String NAME = "Procedural Biome Generation";
 	private static final Dimension dim = new Dimension(WIDTH, HEIGHT);
 	private static boolean running = false;
