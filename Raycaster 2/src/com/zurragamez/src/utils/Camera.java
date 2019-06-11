@@ -1,6 +1,5 @@
 package com.zurragamez.src.utils;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class Camera {
 	}
 	
 	public void drawWalls() {
-		Color color = Color.white;
+		int colorHex = 0;
 		int[] texture = new int[Main.textureSize*Main.textureSize];
 		
 		float warmR = 1f;
@@ -106,26 +105,24 @@ public class Camera {
 				
 				int texY = (int)(d * Main.textureSize);
 				if(wall.id == 1 || wall.id == 2) {
-					color = new Color(texture[wall.textureX + texY * Main.textureSize]);
-					float r = clamp(color.getRed() * lightR * fog, 0, 255);
-					float g = clamp(color.getGreen() * lightG * fog, 0, 255);
-					float b = clamp(color.getBlue() * lightB * fog, 0, 255);
-					color = new Color((int)r, (int)g, (int)b);
+					int pixel = texture[wall.textureX + texY * Main.textureSize];
+					float r = clamp(((pixel & 0xff0000) >> 16) * lightR * fog, 0, 255);
+					float g = clamp(((pixel & 0xff00) >> 8) * lightG * fog, 0, 255);
+					float b = clamp(((pixel & 0xff)) * lightB * fog, 0, 255);
+					colorHex = rgbToHex((int)r, (int)g, (int)b);
 				}
 				
-				main.getPixels()[(wall.x) + (y) * (Main.DRAW_WIDTH)] = color.getRGB();
+				main.getPixels()[(wall.x) + (y) * (Main.DRAW_WIDTH)] = colorHex;
 			}
 			
 			
-			float wallDist, playerDist, currentDist;
+			float wallDist, currentDist;
 			wallDist = wall.distance;
-			playerDist = 0;
-			
 			if(drawEndY < 0) drawEndY = Main.HEIGHT;  
-			//Floor and ceiling
+			
 			for(int y = drawEndY + 1; y < Main.HEIGHT; y++) {
 				currentDist = Main.HEIGHT / (2f * y - Main.HEIGHT);
-				float weight = (currentDist - playerDist) / (wallDist - playerDist);
+				float weight = (currentDist) / (wallDist);
 				float currentFloorX = weight * wall.floorXWall + (1f - weight) * wall.dx;
 				float currentFloorY = weight * wall.floorYWall + (1f - weight) * wall.dy;
 				
@@ -144,21 +141,21 @@ public class Camera {
 				lightG = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmG;
 				lightB = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmB;
 				
-				//Draw floor
-				color = new Color(getTextureFromID(floor_id)[floorTexX + floorTexY * Main.textureSize]);
-				float r = clamp(color.getRed() * lightR * fade, 0, 255);
-				float g = clamp(color.getGreen() * lightG * fade, 0, 255);
-				float b = clamp(color.getBlue() * lightB * fade, 0, 255);
-				color = new Color((int)r, (int)g, (int)b);
-				main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = color.getRGB();
+				//Floor
+				int pixel = getTextureFromID(floor_id)[floorTexX + floorTexY * Main.textureSize];
+				float r = clamp(((pixel & 0xff0000) >> 16) * lightR * fade, 0, 255);
+				float g = clamp(((pixel & 0xff00) >> 8) * lightG * fade, 0, 255);
+				float b = clamp(((pixel & 0xff)) * lightB * fade, 0, 255);
+				colorHex = rgbToHex((int)r, (int)g, (int)b);
+				main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = colorHex;
 				
-				//Draw roof
-				color = new Color(getTextureFromID(roof_id)[floorTexX + floorTexY * Main.textureSize]);
-				r = clamp(color.getRed() * lightR * fade, 0, 255);
-				g = clamp(color.getGreen() * lightG * fade, 0, 255);
-				b = clamp(color.getBlue() * lightB * fade, 0, 255);
-				color = new Color((int)r, (int)g, (int)b);
-				main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = color.getRGB();
+				//Roof
+				pixel = getTextureFromID(roof_id)[floorTexX + floorTexY * Main.textureSize];
+				r = clamp(((pixel & 0xff0000) >> 16) * lightR * fade, 0, 255);
+				g = clamp(((pixel & 0xff00) >> 8) * lightG * fade, 0, 255);
+				b = clamp(((pixel & 0xff)) * lightB * fade, 0, 255);
+				colorHex = rgbToHex((int)r, (int)g, (int)b);
+				main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = colorHex;
 			}
 		}
 	}
@@ -170,7 +167,7 @@ public class Camera {
 		
 		float spriteX = e.getX() - y;
 		float spriteY = e.getY() - x;
-		float invDet = (float) (1.0 / (planeX * dirX - dirY * planeY));
+		float invDet = (float)(1.0 / (planeX * dirX - dirY * planeY));
 		float transformX = (float)(invDet * (dirX * spriteX - dirY * spriteY));
 		float transformY = (float)(invDet * (-planeY * spriteX + planeX * spriteY));
 		int hoverHeight = (int)((e.isOnGround() ? (e.getSprite().height * (1f - e.getScale()) / transformY) : ((e.getHoverHeight() / transformY))) * (Main.HEIGHT / (e.getSprite().height * 2f)));
@@ -206,22 +203,29 @@ public class Camera {
 						float d = ((y - hoverHeight) - (Main.HEIGHT / 2 - spriteHeight / 2)) / (float)spriteHeight;
 						int texY = (int)(d * e.getSprite().height);
 						
-						Color c = new Color(e.getSprite().pixels[texX + texY * e.getSprite().width]);
-						Color prev = new Color(main.getPixels()[stripe + y * Main.DRAW_WIDTH]);
-						float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
-						
-						//		  New color										Color behind alpha
-						float r = clamp((c.getRed() * alpha) * darkness * lightR		+ 		prev.getRed() * (1f-alpha), 0, 255);
-						float g = clamp((c.getGreen() * alpha) * darkness * lightG	+ 		prev.getGreen() * (1f-alpha), 0, 255);
-						float b = clamp((c.getBlue() * alpha) * darkness * lightB		+ 		prev.getBlue() * (1f-alpha), 0, 255);
-//						System.out.println(c.getRed() + ", " + alpha + ", " + darkness + ", " + lightR);
-						
-						Color result = new Color((int)r, (int)g, (int)b);
-						if(c.getRGB() != 0xffff00ff) main.getPixels()[stripe + y * Main.DRAW_WIDTH] = result.getRGB();
+						int pixel = e.getSprite().pixels[texX + texY * e.getSprite().width];
+						int bufferedPixel = main.getPixels()[stripe + y * Main.DRAW_WIDTH];
+						if(pixel != 0xffff00ff) {
+							float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
+							
+							//				Entity Color 														Alpha
+							float r = clamp(((pixel & 0xff0000) >> 16) * alpha * darkness * lightR		+		((bufferedPixel & 0xff0000) >> 16) * (1f -  alpha), 0, 255);
+							float g = clamp(((pixel & 0xff00) >> 8) * alpha * darkness * lightG			+		((bufferedPixel & 0xff00) >> 8) * (1f -  alpha), 0, 255);
+							float b = clamp(((pixel & 0xff)) * alpha * darkness * lightB				+		(bufferedPixel & 0xff) * (1f -  alpha), 0, 255);
+							int colorHex = rgbToHex((int)r, (int)g, (int)b);
+							main.getPixels()[stripe + y * Main.DRAW_WIDTH] = colorHex;
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	private int rgbToHex(int r, int g, int b) {
+		int colorHex = r;
+		colorHex = (colorHex << 8) + g;
+		colorHex = (colorHex << 8) + b;
+		return colorHex;
 	}
 	
 	private int[] getTextureFromID(int id) {

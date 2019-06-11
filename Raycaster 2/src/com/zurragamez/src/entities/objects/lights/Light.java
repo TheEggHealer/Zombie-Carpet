@@ -46,7 +46,7 @@ public class Light extends EntitySprite {
 						for(int x = -blurRadius; x <= blurRadius; x++) {
 							if(x == 0 && y == 0) continue;
 							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > Main.mapHeight - 1 || tilePosY + y > Main.mapWidth - 1) continue;
-							float d = (float)Math.abs(Math.sqrt(x * x + y * y)) * 2;
+							float d = (float)Math.abs(Math.sqrt(x * x + y * y)) * 3;
 							if(Main.brightness[tilePosX + x][tilePosY + y] < Main.brightness[tilePosX][tilePosY] / d) Main.brightness[tilePosX + x][tilePosY + y] = Main.brightness[tilePosX][tilePosY] / d;
 						}
 					}

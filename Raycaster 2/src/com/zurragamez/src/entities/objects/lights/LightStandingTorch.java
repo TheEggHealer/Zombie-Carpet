@@ -1,6 +1,5 @@
 package com.zurragamez.src.entities.objects.lights;
 
-import com.zurragamez.src.Player;
 import com.zurragamez.src.resources.Sprite;
 
 public class LightStandingTorch extends Light {

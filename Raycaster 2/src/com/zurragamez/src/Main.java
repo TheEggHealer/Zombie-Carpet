@@ -23,15 +23,14 @@ import com.zurragamez.src.entities.objects.lights.LightStandingTorch;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
 import com.zurragamez.src.resources.audio.AudioMaster;
-import com.zurragamez.src.resources.audio.Source;
 import com.zurragamez.src.utils.Camera;
 
 public class Main extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
 	
 	private  JFrame frame;
-	public static final int WIDTH = (int)(1920 / 1.5f);
-	public static final int HEIGHT = (int)(1080 / 1.5f);
+	public static final int WIDTH = (int)(1920 / 1f);
+	public static final int HEIGHT = (int)(1080 / 1f);
 	private static final String NAME = "Procedural Biome Generation";
 	private static final Dimension dim = new Dimension(WIDTH, HEIGHT);
 	private static boolean running = false;
@@ -92,20 +91,6 @@ public class Main extends Canvas implements Runnable {
 		
 		this.camera = new Camera(this);
 		this.player = new Player(this, camera, 1.5f, 1.5f);
-		
-//		for(int i = 0; i < 20; i++) {
-//			boolean hasSpawn = false;
-//			int x=0, y=0;
-//			while(!hasSpawn) {
-//				x = random.nextInt(mapWidth);
-//				y = random.nextInt(mapHeight);
-//				if(map[y][x] == 0) hasSpawn = true;
-//			} 
-//			addEntity(new Zombie((x + 0.5f), (y + 0.5f)));
-//		}
-		
-//		addEntity(new LightStandingTorch(3.5f, 3.5f));
-//		addEntity(new LightStandingTorch(5.5f, 3.5f));
 		
 		comparator = new SpriteComparator();
 		comparator.player = player;
