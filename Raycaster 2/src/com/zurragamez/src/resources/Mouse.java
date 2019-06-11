@@ -41,7 +41,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		if(pastMovement.size() > 0) {
 			int total = 0;
 			for(int i = 0; i < pastMovement.size() - 3; i++) {
-				total += pastMovement.get(i);
+				if(pastMovement.get(i) != null) total += pastMovement.get(i);
 			}
 			finalRotation = (float)total / pastMovement.size();
 			if(pastMovement.size() > MOUSE_SMOOTHING) {
