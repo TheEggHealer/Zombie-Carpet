@@ -20,7 +20,7 @@ public class LightStandingTorch extends Light {
 		
 		source = new Source();
 		source.setLocation(x, y);
-		source.setGain(0.2f);
+		source.setGain(0.3f);
 		sound_flame1 = AudioMaster.loadSound("res/sounds/other/flame_01.ogg");
 		sound_flame2 = AudioMaster.loadSound("res/sounds/other/flame_02.ogg");
 	}
