@@ -1,17 +1,26 @@
 package com.zurragamez.src.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.zurragamez.src.resources.Sprite;
 
 public class EntityMonster extends EntitySprite {
 
 	protected boolean ai_roam, ai_followPlayer;
-	protected boolean sound_living, sound_hurt, sound_death;
+	protected boolean sound_living, sound_hurt, sound_death, sound_walk;
 	
 	protected float detectionRadius;
 	protected float hitRadius;
 	
 	private int maxTimeSinceSound, minTimeSinceSound;
 	private int timeSinceSound;
+	
+	protected List<Integer> soundBuffers_living = new ArrayList<Integer>(), 
+							soundBuffers_hurt = new ArrayList<Integer>(),
+							soundBuffers_walk = new ArrayList<Integer>();
+	
+	protected int walkCooldown = 10;
 	
 	public EntityMonster(float x, float y, float scale, boolean onGround, Sprite sprite) {
 		super(x, y, scale, onGround, sprite); 
@@ -35,6 +44,17 @@ public class EntityMonster extends EntitySprite {
 				
 				playSound(getSoundLiving());
 			}
+		}
+	}
+	
+	public void move(float dx, float dy) {
+		super.move(dx, dy);
+		
+		if(sound_walk) {
+			if(--walkCooldown <= 0) {
+				walkCooldown = 35;
+				playSound(getSoundWalk());
+;			}
 		}
 	}
 	
@@ -76,6 +96,14 @@ public class EntityMonster extends EntitySprite {
 	 */
 	public int getSoundHurt() {
 		return soundBuffers_hurt.get(random.nextInt(soundBuffers_hurt.size()));
+	}
+	
+	/**
+	 * Returns a random buffer from the soundBuffers_walk list.
+	 * @return random buffer from the soundBuffers_walk list.
+	 */
+	public int getSoundWalk() {
+		return soundBuffers_walk.get(random.nextInt(soundBuffers_walk.size()));
 	}
 	
 	/**

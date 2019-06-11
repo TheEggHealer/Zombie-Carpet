@@ -57,21 +57,24 @@ public class Player {
 		float dy = 0;
 		
 		if(Keyboard.up) {
-			dx += Math.cos(dir) * speed;
-			dy += Math.sin(dir) * speed;
+			dx += Math.cos(dir);
+			dy += Math.sin(dir);
 		} 
 		if(Keyboard.down) {
-			dx -= Math.cos(dir) * speed;
-			dy -= Math.sin(dir) * speed;
+			dx -= Math.cos(dir);
+			dy -= Math.sin(dir);
 		} 
 		if(Keyboard.left) {
-			dx += Math.cos(dir + Math.PI / 2) * speed;
-			dy += Math.sin(dir + Math.PI / 2) * speed;
+			dx += Math.cos(dir + Math.PI / 2);
+			dy += Math.sin(dir + Math.PI / 2);
 		} 
 		if(Keyboard.right) {
-			dx += Math.cos(dir - Math.PI / 2) * speed;
-			dy += Math.sin(dir - Math.PI / 2) * speed;
+			dx += Math.cos(dir - Math.PI / 2);
+			dy += Math.sin(dir - Math.PI / 2);
 		}
+		
+		dx *= speed;
+		dy *= speed;
 		
 		if(!(dx == 0 && dy == 0)) {
 			if(!checkCollision(x + dx, y + dy)) {

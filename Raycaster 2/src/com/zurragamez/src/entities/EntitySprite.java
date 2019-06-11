@@ -27,7 +27,6 @@ public class EntitySprite {
 	
 	public boolean disableFog = false;
 	
-	protected List<Integer> soundBuffers_living = new ArrayList<Integer>(), soundBuffers_hurt = new ArrayList<Integer>();
 	protected Source[] sources = new Source[AMOUNT_OF_SOURCES];
 
 	public EntitySprite(float x, float y, float scale, boolean onGround, Sprite sprite) {

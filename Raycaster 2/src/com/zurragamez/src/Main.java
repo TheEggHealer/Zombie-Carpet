@@ -82,7 +82,7 @@ public class Main extends Canvas implements Runnable {
 			floor = loadMap("maps/sus_floor.txt");
 			roof = loadMap("maps/sus_roof.txt");
 			brightness = loadBrightness();
-//			loadEntities("maps/sus_entities.txt");
+			loadEntities("maps/sus_entities.txt");
 			
 		} catch (IOException e) {
 			System.err.println("Failed to load map");
@@ -92,7 +92,8 @@ public class Main extends Canvas implements Runnable {
 		this.camera = new Camera(this);
 		this.player = new Player(this, camera, 1.5f, 1.5f);
 		
-		addEntity(new LightStandingTorch(3.5f, 3.5f));
+//		addEntity(new LightStandingTorch(3.5f, 3.5f));
+		addEntity(new Zombie(3.5f, 3.5f));
 		
 		comparator = new SpriteComparator();
 		comparator.player = player;

@@ -8,7 +8,7 @@ public class Zombie extends EntityMonster {
 	private float speed = 0.01f;
 	
 	public Zombie(float x, float y) {
-		super(x, y, 0.6f, true, Sprite.object_light);
+		super(x, y, 0.6f, true, Sprite.zombie_2);
 		hoverHeight = sprite.height;
 		
 		ai_roam = true;
@@ -20,6 +20,7 @@ public class Zombie extends EntityMonster {
 		
 		sound_living = true;
 		sound_hurt = true;
+		sound_walk = true;
 		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_01.ogg"));
 		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_02.ogg"));
 		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_03.ogg"));
@@ -29,6 +30,8 @@ public class Zombie extends EntityMonster {
 		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_02.ogg"));
 		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_03.ogg"));
 		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_04.ogg"));
+		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk.ogg"));
+		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk2.ogg"));
 	}
 
 	public void update() {
@@ -38,7 +41,7 @@ public class Zombie extends EntityMonster {
 		float dy = main.getPlayer().y - y;
 		float dir = (float)Math.atan2(dy, dx);
 		
-//		move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
+		move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
 	}
 	
 }

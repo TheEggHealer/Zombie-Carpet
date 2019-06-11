@@ -17,6 +17,7 @@ public class Sprite {
 	
 	public static Sprite jeb = new Sprite(32, 32, true, "/test.png");
 	public static Sprite zombie = new Sprite(256, 256, true, "/zombie_fix.png");
+	public static Sprite zombie_2 = new Sprite(256, 256, true, "/entities/zombies/zombie2.png");
 	public static Sprite ammo = new Sprite(128, 128, true, "/ammo.png");
 	
 	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
