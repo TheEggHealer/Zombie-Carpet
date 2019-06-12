@@ -40,7 +40,7 @@ public class Zombie extends EntityMonster {
 		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_04.ogg"));
 		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk.ogg"));
 		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk2.ogg"));
-		sound_death = AudioMaster.loadSound("res/sounds/player/death.ogg");
+		sound_death = AudioMaster.loadSound("res/sounds/gore.ogg");
 	}
 
 	public void update() {
@@ -60,6 +60,10 @@ public class Zombie extends EntityMonster {
 		
 			move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
 		}
+	}
+	
+	public void die() {
+		setSprite(Sprite.zombie_2dead);
 	}
 	
 }

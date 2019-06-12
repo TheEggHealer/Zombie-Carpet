@@ -80,11 +80,19 @@ public class EntityMonster extends EntitySprite {
 				playSound(sound_death);
 				ai_followPlayer = false;
 				ai_roam = false;
+				sound_living = false;
 				
-				//dead = true;
-				health = 100;
+				dead = true;
+				die();
+				//health = 100;
 			}
 		}
+	}
+	
+	/**
+	 *  When the ent dies
+	 */
+	public void die() {
 	}
 	
 	/**
@@ -140,7 +148,7 @@ public class EntityMonster extends EntitySprite {
 			if(sources[i].timeSinceUsed > sources[sourceNumber].timeSinceUsed) sourceNumber = i;
 		}
 		
-		sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.2f);
+		sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.3f);
 		sources[sourceNumber].play(buffer);
 	}
 	
