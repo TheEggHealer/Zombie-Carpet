@@ -21,7 +21,6 @@ public class EntitySound {
 	}
 	
 	public void update() {
-		System.out.println("Sus");
 		if (!source.isPlaying()) {
 			remove = true;
 			source.stop();

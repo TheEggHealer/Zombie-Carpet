@@ -80,7 +80,9 @@ public class EntityMonster extends EntitySprite {
 				playSound(sound_death);
 				ai_followPlayer = false;
 				ai_roam = false;
+				
 				//dead = true;
+				health = 100;
 			}
 		}
 	}

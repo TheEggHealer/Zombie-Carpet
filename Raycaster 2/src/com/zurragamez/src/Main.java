@@ -171,14 +171,14 @@ public class Main extends Canvas implements Runnable {
 	    	if(index > 0) {
 	        String[] cells = line.split(",");
 		        for(int i = 0; i < cells.length; i++) {
-		        	System.out.println(i + ", " + (index - 1));
+		        	//System.out.println(i + ", " + (index - 1));
 		        	map[i][index - 1] = Integer.parseInt(cells[i]);
 		        }
 	    	} else {
 	    		String[] size = line.split(",");
 	    		width = Integer.parseInt(size[0]);
 	    		height = Integer.parseInt(size[1]);
-	    		System.out.println(width + ", " + height);
+	    		//System.out.println(width + ", " + height);
 	    		map = new int[height][width];
 	    	}
 	    	index++;
