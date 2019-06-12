@@ -32,7 +32,7 @@ public class Main extends Canvas implements Runnable {
 	private  JFrame frame;
 	public static final int WIDTH = (int)(1920 / 1.5f);
 	public static final int HEIGHT = (int)(1080 / 1.5f);
-	private static final String NAME = "Procedural Biome Generation";
+	private static final String NAME = "Zombie Carpet";
 	private static final Dimension dim = new Dimension(WIDTH, HEIGHT);
 	private static boolean running = false;
 	public static boolean useMouseMovement = true;

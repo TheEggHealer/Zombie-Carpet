@@ -7,8 +7,10 @@ import com.zurragamez.src.resources.Sprite;
 
 public class EntityMonster extends EntitySprite {
 
+	public float health = 100;
+	
 	protected boolean ai_roam, ai_followPlayer;
-	protected boolean sound_living, sound_hurt, sound_death, sound_walk;
+	protected boolean sound_living, sound_hurt, dead, sound_walk;
 	
 	protected float detectionRadius;
 	protected float hitRadius;
@@ -16,6 +18,7 @@ public class EntityMonster extends EntitySprite {
 	private int maxTimeSinceSound, minTimeSinceSound;
 	private int timeSinceSound;
 	
+	public int sound_death;
 	protected List<Integer> soundBuffers_living = new ArrayList<Integer>(), 
 							soundBuffers_hurt = new ArrayList<Integer>(),
 							soundBuffers_walk = new ArrayList<Integer>();
@@ -48,13 +51,15 @@ public class EntityMonster extends EntitySprite {
 	}
 	
 	public void move(float dx, float dy) {
-		super.move(dx, dy);
-		
-		if(sound_walk) {
-			if(--walkCooldown <= 0) {
-				walkCooldown = 35;
-				playSound(getSoundWalk());
-;			}
+		if(!dead) {			
+			super.move(dx, dy);
+			
+			if(sound_walk) {
+				if(--walkCooldown <= 0) {
+					walkCooldown = 35;
+					playSound(getSoundWalk());
+	;			}
+			}
 		}
 	}
 	
@@ -68,7 +73,16 @@ public class EntityMonster extends EntitySprite {
 	 * @param damage
 	 */
 	public void hurt(float damage) {
-		playSound(getSoundHurt());
+		if(!dead) {
+			playSound(getSoundHurt());
+			health -= damage;
+			if(health <= 0) {
+				playSound(sound_death);
+				ai_followPlayer = false;
+				ai_roam = false;
+				//dead = true;
+			}
+		}
 	}
 	
 	/**
@@ -95,6 +109,14 @@ public class EntityMonster extends EntitySprite {
 	 * @return random buffer from the soundBuffers_hurt list.
 	 */
 	public int getSoundHurt() {
+		return soundBuffers_hurt.get(random.nextInt(soundBuffers_hurt.size()));
+	}
+	
+	/**
+	 * Returns a random buffer from the soundBuffers_die list.
+	 * @return random buffer from the soundBuffers_die list.
+	 */
+	public int getSoundDie() {
 		return soundBuffers_hurt.get(random.nextInt(soundBuffers_hurt.size()));
 	}
 	
