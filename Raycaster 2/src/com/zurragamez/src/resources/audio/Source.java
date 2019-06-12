@@ -9,6 +9,7 @@ public class Source {
 	
 	public Source() {
 		sourceId = AL10.alGenSources();
+		System.out.println(sourceId + ", " + AL10.alGetError());
 		stop();
 	}
 	

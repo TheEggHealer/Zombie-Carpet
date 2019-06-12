@@ -41,7 +41,7 @@ public class Zombie extends EntityMonster {
 		float dy = main.getPlayer().y - y;
 		float dir = (float)Math.atan2(dy, dx);
 		
-		move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
+//		move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
 	}
 	
 }
