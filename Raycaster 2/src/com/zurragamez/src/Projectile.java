@@ -4,6 +4,7 @@ import java.util.Random;
 import com.zurragamez.src.entities.EntitySound;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.entities.Zombie;
+import com.zurragamez.src.entities.objects.lights.BulletLight;
 import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.entities.particles.ParticleWall;
 import com.zurragamez.src.resources.Sprite;
@@ -15,6 +16,7 @@ public class Projectile extends EntitySprite {
 	private float speed;
 	private float heightChange;
 	private int soundID;
+	private BulletLight bulletLight;
 	
 	private Random random = new Random();
 	
@@ -28,6 +30,12 @@ public class Projectile extends EntitySprite {
 		heightChange = random.nextFloat() * 2f - 1;
 		
 		disableFog = false;
+	}
+	
+	public void init(Main main) {
+		super.init(main);
+		bulletLight = new BulletLight(x,y, this);
+		bulletLight.init(main);
 	}
 	
 	public void update() {
@@ -45,6 +53,8 @@ public class Projectile extends EntitySprite {
 			}
 			remove = true;
 		}
+		
+		bulletLight.update();
 		
 		for(int i = 0; i < main.getEntities().size(); i++) {
 			EntitySprite e = main.getEntities().get(i);

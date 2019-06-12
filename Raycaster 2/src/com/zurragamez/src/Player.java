@@ -1,6 +1,8 @@
 package com.zurragamez.src;
 import java.util.Random;
 
+import com.zurragamez.src.entities.EntitySprite;
+import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
 import com.zurragamez.src.resources.Sprite;
@@ -12,6 +14,7 @@ public class Player {
 	
 	public float x, y;
 	public float dir;
+	public float health = 100f;
 	
 	private float speed = 0.03f;
 	private float rotSpeed = 0.04f;
@@ -19,10 +22,11 @@ public class Player {
 	private Main main;
 	private Camera camera;
 	
-	private int sound_walk1, sound_walk2, sound_shoot1;
+	private int sound_walk1, sound_walk2, sound_shoot1, damage_player1, kill_player;
 	private int walkCooldown = 10;
 	private Source walkingSource;
 	private Source shootingSource;
+	private Source hurtSource;
 	
 	private Random random = new Random();
 	
@@ -37,13 +41,20 @@ public class Player {
 		walkingSource.setLocation(x, y);
 		shootingSource = new Source();
 		shootingSource.setLocation(x, y);
+		hurtSource = new Source();
 		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
 		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
 		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
 		
+		damage_player1 = AudioMaster.loadSound("res/sounds/player/death.ogg");
+		kill_player = AudioMaster.loadSound("res/sounds/player/death.ogg");
+		
 	}
 	
 	public void update() {
+		if(health <= 0) {
+			System.out.println("GAME OVER!");
+		}
 		movement();
 		
 		if(Keyboard.shoot || Mouse.button == 1) {
@@ -55,6 +66,12 @@ public class Player {
 			
 			main.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
 		}
+	}
+	
+	public void hurt(EntitySprite ent, float damage) {
+		hurtSource.setLocation(x, y);
+		hurtSource.play(damage_player1);
+		main.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
 	}
 	
 	public void movement() {

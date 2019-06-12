@@ -18,12 +18,13 @@ public class Sprite {
 	public static Sprite jeb = new Sprite(32, 32, true, "/test.png");
 	public static Sprite zombie = new Sprite(256, 256, true, "/zombie_fix.png");
 	public static Sprite zombie_2 = new Sprite(256, 256, true, "/entities/zombies/zombie2.png");
+	public static Sprite zombie_2dead = new Sprite(256, 256, true, "/entities/zombies/zombie3.png");
 	public static Sprite ammo = new Sprite(128, 128, true, "/ammo.png");
 	
 	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
 	public static Sprite wall_wood = new Sprite(64, 64, true, "/walls/planks01.png");
 	
-	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/lol.png");
+	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
 	
 	//Objects
 	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
