@@ -21,7 +21,7 @@ public class Projectile extends EntitySprite {
 	private Random random = new Random();
 	
 	public Projectile(float x, float y, float direction, float scale, Sprite sprite) {
-		super(x, y, 0.05f, false, sprite);
+		super(x, y, 0.05f, false, false, sprite);
 		this.dir = direction + (random.nextFloat()-0.5f) * 0.04f;
 		this.speed = 0.2f;
 		soundID = AudioMaster.sus;
@@ -32,10 +32,10 @@ public class Projectile extends EntitySprite {
 		disableFog = false;
 	}
 	
-	public void init(Main main) {
-		super.init(main);
+	public void init(World world) {
+		super.init(world);
 		bulletLight = new BulletLight(x,y, this);
-		bulletLight.init(main);
+		bulletLight.init(world);
 	}
 	
 	public void update() {
@@ -44,26 +44,26 @@ public class Projectile extends EntitySprite {
 		
 		hoverHeight -= heightChange;
 		
-		if(x < 0 || x > Main.mapWidth-1 || y < 0 || y > Main.mapHeight-1) remove = true;
+		if(x < 0 || x > World.mapWidth-1 || y < 0 || y > World.mapHeight-1) remove = true;
 
-		if(Main.map[(int)(x)][(int)(y)] != 0) {
+		if(World.map[(int)(x)][(int)(y)] != 0) {
 			for(int i = 0; i < 1; i++) {
-				main.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), Main.map[(int)(x)][(int)(y)]));
-				main.addSound(new EntitySound((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), soundID));
+				world.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), World.map[(int)(x)][(int)(y)]));
+				world.addSound(new EntitySound((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), soundID));
 			}
 			remove = true;
 		}
 		
 		bulletLight.update();
 		
-		for(int i = 0; i < main.getEntities().size(); i++) {
-			EntitySprite e = main.getEntities().get(i);
+		for(int i = 0; i < world.getEntities().size(); i++) {
+			EntitySprite e = world.getEntities().get(i);
 			if(e instanceof Zombie) {
 				Zombie z = (Zombie)e;
 				if(distance(z) <= z.getHitRadius()) {
 					z.hurt(10);
 					for(int a = 0; a < 10; a++) {
-						main.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
+						world.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
 					}
 					remove = true;
 				}

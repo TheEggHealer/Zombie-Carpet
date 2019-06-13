@@ -3,6 +3,8 @@ package com.zurragamez.src.entities;
 import com.zurragamez.src.resources.audio.Source;
 
 public class EntitySound {
+	private static final String TAG = "EntitySound";
+	
 	public float x, y;
 	public Source source;
 	public int soundbuffer;
@@ -13,7 +15,7 @@ public class EntitySound {
 		this.y = y;
 		this.soundbuffer = soundbuffer;
 		
-		source = new Source();
+		source = new Source(TAG);
 		
 		source.setLocation(x, y);
 		source.play(soundbuffer);

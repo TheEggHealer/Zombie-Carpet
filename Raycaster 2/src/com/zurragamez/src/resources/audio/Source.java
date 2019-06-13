@@ -2,14 +2,19 @@ package com.zurragamez.src.resources.audio;
 
 import org.lwjgl.openal.AL10;
 
+import com.zurragamez.src.Main;
+
 public class Source {
+	private static final String TAG = "Source";
 
 	private int sourceId;
 	public int timeSinceUsed = 0;
 	
-	public Source() {
+	public Source(String tag) {
 		sourceId = AL10.alGenSources();
-		System.out.println(sourceId + ", " + AL10.alGetError());
+//		System.out.println("Debug Tag: " + call + ": " + sourceId + ", " + AL10.alGetError());
+		if(AL10.alGetError() == 0) Main.printDebug(tag + "->" + TAG, "Created source: " + sourceId + " successfully");
+		else  Main.printDebugErr(tag + "->" + TAG, "Created source: " + sourceId + "AL Error msg: " + AL10.alGetError());
 		stop();
 	}
 	

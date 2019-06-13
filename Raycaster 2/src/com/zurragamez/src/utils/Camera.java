@@ -6,6 +6,7 @@ import java.util.List;
 import com.zurragamez.src.Main;
 import com.zurragamez.src.Ray;
 import com.zurragamez.src.Wall;
+import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;
 
@@ -22,10 +23,10 @@ public class Camera {
 	private List<Wall> walls = new ArrayList<>();
 	private float[] zBuffer = new float[Main.DRAW_WIDTH];
 	
-	private Main main;
+	private World world;
 	
-	public Camera(Main main) {
-		this.main = main;
+	public Camera(World world) {
+		this.world = world;
 		
 		this.dirX = 0;
 		this.dirY = 1;
@@ -72,7 +73,7 @@ public class Camera {
 	
 	public void drawWalls() {
 		int colorHex = 0;
-		int[] texture = new int[Main.textureSize*Main.textureSize];
+		int[] texture = new int[World.textureSize*World.textureSize];
 		
 		float warmR = 1f;
 		float warmG = 0.4f;
@@ -82,12 +83,12 @@ public class Camera {
 			Wall wall = walls.get(i);
 			
 			float fog = clamp(wall.height * 0.5f / (float)Main.HEIGHT, 0, 1);
-			fog *= (1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * 6);
+			fog *= (1 + World.brightness[(int) wall.hitY][(int) wall.hitX] * 6);
 			fog = clamp(fog, 0, 1);
 			
-			float lightR = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmR;
-			float lightG = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmG;
-			float lightB = 1 + Main.brightness[(int) wall.hitY][(int) wall.hitX] * warmB;
+			float lightR = 1 + World.brightness[(int) wall.hitY][(int) wall.hitX] * warmR;
+			float lightG = 1 + World.brightness[(int) wall.hitY][(int) wall.hitX] * warmG;
+			float lightB = 1 + World.brightness[(int) wall.hitY][(int) wall.hitX] * warmB;
 			
 			texture = getTextureFromID(wall.id);
 			
@@ -103,16 +104,16 @@ public class Camera {
 				
 				float d = ((float)(y - wall.y) / (wall.height));
 				
-				int texY = (int)(d * Main.textureSize);
+				int texY = (int)(d * World.textureSize);
 				if(wall.id == 1 || wall.id == 2) {
-					int pixel = texture[wall.textureX + texY * Main.textureSize];
+					int pixel = texture[wall.textureX + texY * World.textureSize];
 					float r = clamp(((pixel & 0xff0000) >> 16) * lightR * fog, 0, 255);
 					float g = clamp(((pixel & 0xff00) >> 8) * lightG * fog, 0, 255);
 					float b = clamp(((pixel & 0xff)) * lightB * fog, 0, 255);
 					colorHex = rgbToHex((int)r, (int)g, (int)b);
 				}
 				
-				main.getPixels()[(wall.x) + (y) * (Main.DRAW_WIDTH)] = colorHex;
+				world.main.getPixels()[(wall.x) + (y) * (Main.DRAW_WIDTH)] = colorHex;
 			}
 			
 			
@@ -127,35 +128,35 @@ public class Camera {
 				float currentFloorY = weight * wall.floorYWall + (1f - weight) * wall.dy;
 				
 				int floorTexX, floorTexY;
-				floorTexX = (int)(currentFloorX * Main.textureSize) % Main.textureSize;
-				floorTexY = (int)(currentFloorY * Main.textureSize) % Main.textureSize;
+				floorTexX = (int)(currentFloorX * World.textureSize) % World.textureSize;
+				floorTexY = (int)(currentFloorY * World.textureSize) % World.textureSize;
 				
-				int floor_id = Main.floor[(int)(currentFloorX)][(int)(currentFloorY)];
-				int roof_id = Main.roof[(int)(currentFloorX)][(int)(currentFloorY)];
+				int floor_id = World.floor[(int)(currentFloorX)][(int)(currentFloorY)];
+				int roof_id = World.roof[(int)(currentFloorX)][(int)(currentFloorY)];
 				
 				float fade = ((float)y - Main.HEIGHT * 0.5f) / (Main.HEIGHT * 0.5f);
-				fade *= (1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * 3);
+				fade *= (1 + World.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * 3);
 				fade = clamp(fade, 0, 1);
 				
-				lightR = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmR;
-				lightG = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmG;
-				lightB = 1 + Main.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmB;
+				lightR = 1 + World.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmR;
+				lightG = 1 + World.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmG;
+				lightB = 1 + World.brightness[(int)(currentFloorX)][(int)(currentFloorY)] * warmB;
 				
 				//Floor
-				int pixel = getTextureFromID(floor_id)[floorTexX + floorTexY * Main.textureSize];
+				int pixel = getTextureFromID(floor_id)[floorTexX + floorTexY * World.textureSize];
 				float r = clamp(((pixel & 0xff0000) >> 16) * lightR * fade, 0, 255);
 				float g = clamp(((pixel & 0xff00) >> 8) * lightG * fade, 0, 255);
 				float b = clamp(((pixel & 0xff)) * lightB * fade, 0, 255);
 				colorHex = rgbToHex((int)r, (int)g, (int)b);
-				main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = colorHex;
+				world.main.getPixels()[wall.x + y * Main.DRAW_WIDTH] = colorHex;
 				
 				//Roof
-				pixel = getTextureFromID(roof_id)[floorTexX + floorTexY * Main.textureSize];
+				pixel = getTextureFromID(roof_id)[floorTexX + floorTexY * World.textureSize];
 				r = clamp(((pixel & 0xff0000) >> 16) * lightR * fade, 0, 255);
 				g = clamp(((pixel & 0xff00) >> 8) * lightG * fade, 0, 255);
 				b = clamp(((pixel & 0xff)) * lightB * fade, 0, 255);
 				colorHex = rgbToHex((int)r, (int)g, (int)b);
-				main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = colorHex;
+				world.main.getPixels()[wall.x + (Main.HEIGHT - y) * Main.DRAW_WIDTH] = colorHex;
 			}
 		}
 	}
@@ -191,9 +192,9 @@ public class Camera {
 		else if(darkness > 1) darkness = 1;
 		if(e.disableFog) darkness = 1;
 		
-		float lightR = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmR;
-		float lightG = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmG;
-		float lightB = 1 + Main.brightness[(int) e.getX()][(int) e.getY()] * warmB;
+		float lightR = 1 + World.brightness[(int) e.getX()][(int) e.getY()] * warmR;
+		float lightG = 1 + World.brightness[(int) e.getX()][(int) e.getY()] * warmG;
+		float lightB = 1 + World.brightness[(int) e.getX()][(int) e.getY()] * warmB;
 		
 		for(int stripe = drawStartX; stripe < drawEndX; stripe++) {
 			if(spriteScreenX > 0 && spriteScreenX < Main.DRAW_WIDTH) {
@@ -204,7 +205,7 @@ public class Camera {
 						int texY = (int)(d * e.getSprite().height);
 						
 						int pixel = e.getSprite().pixels[texX + texY * e.getSprite().width];
-						int bufferedPixel = main.getPixels()[stripe + y * Main.DRAW_WIDTH];
+						int bufferedPixel = world.main.getPixels()[stripe + y * Main.DRAW_WIDTH];
 						if(pixel != 0xffff00ff) {
 							float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
 							
@@ -213,7 +214,7 @@ public class Camera {
 							float g = clamp(((pixel & 0xff00) >> 8) * alpha * darkness * lightG			+		((bufferedPixel & 0xff00) >> 8) * (1f -  alpha), 0, 255);
 							float b = clamp(((pixel & 0xff)) * alpha * darkness * lightB				+		(bufferedPixel & 0xff) * (1f -  alpha), 0, 255);
 							int colorHex = rgbToHex((int)r, (int)g, (int)b);
-							main.getPixels()[stripe + y * Main.DRAW_WIDTH] = colorHex;
+							world.main.getPixels()[stripe + y * Main.DRAW_WIDTH] = colorHex;
 						}
 					}
 				}

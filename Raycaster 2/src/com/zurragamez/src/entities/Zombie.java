@@ -1,11 +1,11 @@
 package com.zurragamez.src.entities;
 
-import com.zurragamez.src.Projectile;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
 import com.zurragamez.src.resources.audio.Source;
 
 public class Zombie extends EntityMonster {
+	private static final String TAG = "EntitySprite>EntityMonster>Zombie";
 
 	private float speed = 0.01f;
 	private Source shootingSource;
@@ -15,7 +15,8 @@ public class Zombie extends EntityMonster {
 		super(x, y, 0.6f, true, Sprite.zombie_2);
 		hoverHeight = sprite.height;
 		
-		shootingSource = new Source();
+		//TODO: Use sources[] instead
+		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
 		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
 		
@@ -47,18 +48,18 @@ public class Zombie extends EntityMonster {
 		super.update();
 		
 		if(!dead) {
-			float dx = main.getPlayer().x - x;
-			float dy = main.getPlayer().y - y;
+			float dx = world.getPlayer().x - x;
+			float dy = world.getPlayer().y - y;
 			float dir = (float)Math.atan2(dy, dx);
 			
 			if(1f + random.nextInt(20) == 1) {			
-					shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
-					shootingSource.play(sound_shoot1);
+//					shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
+//					shootingSource.play(sound_shoot1);
 					
-					main.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
+//					main.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
 			}
 
-			move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
+//			move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
 		}
 	}
 	

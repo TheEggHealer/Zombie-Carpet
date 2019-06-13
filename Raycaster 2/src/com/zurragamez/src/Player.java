@@ -11,6 +11,7 @@ import com.zurragamez.src.resources.audio.Source;
 import com.zurragamez.src.utils.Camera;
 
 public class Player {
+	private static final String TAG = "Player";
 	
 	public float x, y;
 	public float dir;
@@ -19,10 +20,10 @@ public class Player {
 	private float speed = 0.03f;
 	private float rotSpeed = 0.04f;
 	
-	private Main main;
+	private World world;
 	private Camera camera;
 	
-	private int sound_walk1, sound_walk2, sound_shoot1, damage_player1, kill_player;
+	private int sound_walk1, sound_walk2, sound_shoot1, damage_player1;
 	private int walkCooldown = 10;
 	private Source walkingSource;
 	private Source shootingSource;
@@ -30,25 +31,23 @@ public class Player {
 	
 	private Random random = new Random();
 	
-	public Player(Main main, Camera camera, float x, float y) {
+	public Player(World world, Camera camera, float x, float y) {
 		this.x = y;
 		this.y = x;
 		
-		this.main = main;
+		this.world = world;
 		this.camera = camera;
 		
-		walkingSource = new Source();
+		walkingSource = new Source(TAG);
 		walkingSource.setLocation(x, y);
-		shootingSource = new Source();
+		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
-		hurtSource = new Source();
+		hurtSource = new Source(TAG);
 		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
 		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
 		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
 		
 		damage_player1 = AudioMaster.loadSound("res/sounds/player/death.ogg");
-		kill_player = AudioMaster.loadSound("res/sounds/player/death.ogg");
-		
 	}
 	
 	public void update() {
@@ -64,14 +63,14 @@ public class Player {
 			shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
 			shootingSource.play(sound_shoot1);
 			
-			main.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
+			world.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
 		}
 	}
 	
 	public void hurt(EntitySprite ent, float damage) {
 		hurtSource.setLocation(x, y);
 		hurtSource.play(damage_player1);
-		main.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
+		world.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
 	}
 	
 	public void movement() {
@@ -151,7 +150,7 @@ public class Player {
 	 * @return True if collision, else False
 	 */
 	protected boolean checkCollision(float x, float y) {
-		return Main.map[(int)x][(int)y] != 0;
+		return World.map[(int)x][(int)y] != 0;
 	}
 	
 	

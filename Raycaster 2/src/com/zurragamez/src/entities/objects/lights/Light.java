@@ -3,7 +3,7 @@ package com.zurragamez.src.entities.objects.lights;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zurragamez.src.Main;
+import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;
 
@@ -16,8 +16,8 @@ public class Light extends EntitySprite {
 
 	protected List<Integer> affectedTiles = new ArrayList<Integer>();
 	
-	public Light(float x, float y, float scale, boolean onGround, int lightRadius, Sprite sprite) {
-		super(x, y, scale, onGround, sprite);
+	public Light(float x, float y, float scale, boolean onGround, int lightRadius, boolean hasSound, Sprite sprite) {
+		super(x, y, scale, onGround, hasSound, sprite);
 		this.lightRadius = lightRadius;
 		
 		setupLight();
@@ -33,22 +33,22 @@ public class Light extends EntitySprite {
 			for(int dist = 0; dist < lightRadius; dist++) {
 				int tilePosX = (int)(x + dx * dist);
 				int tilePosY = (int)(y + dy * dist);
-				int tilePosXY = tilePosX + tilePosY * Main.mapHeight;
+				int tilePosXY = tilePosX + tilePosY * World.mapHeight;
 				
-				if(tilePosX < 0 || tilePosY < 0 || tilePosX > Main.mapWidth - 1 || tilePosY > Main.mapHeight - 1) break;
-				if(Main.map[tilePosX][tilePosY] != 0) break;
+				if(tilePosX < 0 || tilePosY < 0 || tilePosX > World.mapWidth - 1 || tilePosY > World.mapHeight - 1) break;
+				if(World.map[tilePosX][tilePosY] != 0) break;
 				
 				if(!affectedTiles.contains(tilePosXY)) {
 					float distanceToTile = (float)Math.abs(Math.sqrt(((tilePosX) - x) * ((tilePosX) - x) + ((tilePosY) - y) * ((tilePosY) - y)));
 					
-					Main.brightness[tilePosX][tilePosY] += (1f - ((float)distanceToTile / lightRadius)) * brightness;
+					World.brightness[tilePosX][tilePosY] += (1f - ((float)distanceToTile / lightRadius)) * brightness;
 					for(int y = -blurRadius; y <= blurRadius; y++) {
 						for(int x = -blurRadius; x <= blurRadius; x++) {
 							if(x == 0 && y == 0) continue;
-							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > Main.mapWidth - 1 || tilePosY + y > Main.mapHeight - 1) continue;
-							if(Main.map[tilePosX + x][tilePosY + y] != 0) continue;
+							if(tilePosX + x < 0 || tilePosY + y < 0 || tilePosX + x > World.mapWidth - 1 || tilePosY + y > World.mapHeight - 1) continue;
+							if(World.map[tilePosX + x][tilePosY + y] != 0) continue;
 							float d = (float)Math.abs(Math.sqrt(x * x + y * y)) * 3;
-							if(Main.brightness[tilePosX + x][tilePosY + y] < Main.brightness[tilePosX][tilePosY] / d) Main.brightness[tilePosX + x][tilePosY + y] = Main.brightness[tilePosX][tilePosY] / d;
+							if(World.brightness[tilePosX + x][tilePosY + y] < World.brightness[tilePosX][tilePosY] / d) World.brightness[tilePosX + x][tilePosY + y] = World.brightness[tilePosX][tilePosY] / d;
 						}
 					}
 					

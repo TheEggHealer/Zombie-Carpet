@@ -26,7 +26,7 @@ public class EntityMonster extends EntitySprite {
 	protected int walkCooldown = 10;
 	
 	public EntityMonster(float x, float y, float scale, boolean onGround, Sprite sprite) {
-		super(x, y, scale, onGround, sprite); 
+		super(x, y, scale, onGround, true, sprite); 
 		maxTimeSinceSound = 1800;
 		minTimeSinceSound = 400;
 		timeSinceSound = minTimeSinceSound + random.nextInt(maxTimeSinceSound - minTimeSinceSound);
@@ -36,16 +36,12 @@ public class EntityMonster extends EntitySprite {
 		super.update();
 		
 		if(ai_roam) roam();
-		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
-			sources[i].timeSinceUsed++;
-			sources[i].setLocation(x, y);
-		}
 		
 		if(sound_living) {
 			if(--timeSinceSound <= 0) {
 				timeSinceSound = minTimeSinceSound + random.nextInt(maxTimeSinceSound - minTimeSinceSound);
 				
-				playSound(getSoundLiving());
+				playSound(getSoundLiving(), true);
 			}
 		}
 	}
@@ -57,7 +53,7 @@ public class EntityMonster extends EntitySprite {
 			if(sound_walk) {
 				if(--walkCooldown <= 0) {
 					walkCooldown = 35;
-					playSound(getSoundWalk());
+					playSound(getSoundWalk(), true);
 	;			}
 			}
 		}
@@ -74,10 +70,10 @@ public class EntityMonster extends EntitySprite {
 	 */
 	public void hurt(float damage) {
 		if(!dead) {
-			playSound(getSoundHurt());
+			playSound(getSoundHurt(), true);
 			health -= damage;
 			if(health <= 0) {
-				playSound(sound_death);
+				playSound(sound_death, true);
 				ai_followPlayer = false;
 				ai_roam = false;
 				sound_living = false;
@@ -136,20 +132,6 @@ public class EntityMonster extends EntitySprite {
 	 */
 	public int getSoundWalk() {
 		return soundBuffers_walk.get(random.nextInt(soundBuffers_walk.size()));
-	}
-	
-	/**
-	 * Finds the sound source with the longest time since used, then sends the specified sound buffer to that source.
-	 * @param id
-	 */
-	public void playSound(int buffer) {
-		int sourceNumber = 0;
-		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
-			if(sources[i].timeSinceUsed > sources[sourceNumber].timeSinceUsed) sourceNumber = i;
-		}
-		
-		sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.3f);
-		sources[sourceNumber].play(buffer);
 	}
 	
 }

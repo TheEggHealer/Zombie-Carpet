@@ -8,7 +8,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zurragamez.src.Main;
+
 public class Sprite {
+	private static final String TAG = "Sprite";
 	
 	public BufferedImage image;
 	public int width, height;
@@ -50,7 +53,10 @@ public class Sprite {
 			if(getPixels) {
 				image.getRGB(0, 0, width, height, pixels, 0, width);
 			}
+			
+			Main.printDebug(TAG, "Loaded: " + path + " successfully.");
 		} catch(IOException e) {
+			Main.printDebugErr(TAG, "Failed to load: " + path);
 			e.printStackTrace();
 		}
 	}
@@ -62,6 +68,8 @@ public class Sprite {
 				pixels[dx + dy * width] = this.pixels[(x + dx) + (y + dy) * this.width];
 			}
 		}
+		
+		Main.printDebug(TAG, "Created a sub sprite from: " + this.toString());
 		return new Sprite(width, height, pixels);
 	}
 	
@@ -74,6 +82,8 @@ public class Sprite {
 				pixels[dx + dy * customWidth] = this.pixels[(x + (int)(dx / px)) + (y + (int)(dy / py)) * this.width];
 			}
 		}
+		
+		Main.printDebug(TAG, "Created a sub sprite from: " + this.toString());
 		return new Sprite(customWidth, customHeight, pixels);
 	}
 	
@@ -83,6 +93,7 @@ public class Sprite {
 			pixels[i] = color.getRGB();
 		}
 		
+		Main.printDebug(TAG, "Generated a new sprite");
 		return new Sprite(width, height, pixels);
 	}
 	

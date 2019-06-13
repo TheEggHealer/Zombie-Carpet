@@ -1,18 +1,17 @@
 package com.zurragamez.src.entities;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import com.zurragamez.src.Main;
 import com.zurragamez.src.Player;
+import com.zurragamez.src.World;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.Source;
 
 public class EntitySprite {
+	private static final String TAG = "EntitySprite";
 	
-	/** The more sources, the more sounds the entity can play at once. However, for the sake of memory, this value should be as low as possible. */
-	protected final int AMOUNT_OF_SOURCES = 5;
+	/** The more sources, the more sounds the entity can play at once. Total maximum amount of sources at once is 256. */
+	protected int AMOUNT_OF_SOURCES = 4;
 	
 	protected float y, x;
 	protected float scale;
@@ -20,37 +19,54 @@ public class EntitySprite {
 	protected boolean onGround;
 	protected boolean remove = false;
 	protected Sprite sprite;
-	protected Main main;
+	protected World world;
 	protected static Random random = new Random();
 	
 	protected float nearRadius;
 	
 	public boolean disableFog = false;
 	
+	protected boolean hasSound = false;
 	protected Source[] sources = new Source[AMOUNT_OF_SOURCES];
 
-	public EntitySprite(float x, float y, float scale, boolean onGround, Sprite sprite) {
+	public EntitySprite(float x, float y, float scale, boolean onGround, boolean hasSound, Sprite sprite) {
 		this.x = x;
 		this.y = y;
 		this.scale = scale;
 		this.onGround = onGround;
 		setSprite(sprite);
 		
-		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
-			sources[i] = new Source();
+		this.hasSound = hasSound;
+		if(hasSound) {
+			for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
+				sources[i] = new Source(TAG);
+			}
 		}
 	}
 	
-	public void init(Main main) {
-		this.main = main;
+	public void init(World world) {
+		this.world = world;
+	}
+	
+	public void setSources(int amount) {
+		for(Source source : sources) {
+			source.delete();
+		}
+		
+		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
+			if(i < amount) sources[i] = new Source(TAG);
+		}
+		this.AMOUNT_OF_SOURCES = amount;
 	}
 	
 	/**
 	 * Queues the entity to be removed from the entities list in the Main class.
 	 */
 	public void remove() {
-		for(Source source : sources) {
-			source.delete();
+		if(hasSound) {
+			for(Source source : sources) {
+				source.delete();
+			}
 		}
 		remove = true;
 	}
@@ -61,6 +77,13 @@ public class EntitySprite {
 	
 	public void update() {
 		if(distanceToPlayer() <= nearRadius) updateNear();
+		
+		if(hasSound) {
+			for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
+				sources[i].timeSinceUsed++;
+				sources[i].setLocation(x, y);
+			}
+		}
 	}
 	
 	/**
@@ -97,7 +120,7 @@ public class EntitySprite {
 	 * @return True if collision, else False
 	 */
 	protected boolean checkCollision(float x, float y) {
-		return Main.map[(int)x][(int)y] != 0;
+		return World.map[(int)x][(int)y] != 0;
 	}
 	
 	/**
@@ -109,9 +132,45 @@ public class EntitySprite {
 		return (float)Math.abs((e.x - x) * (e.x - x) + (e.y - y) * (e.y - y));
 	}
 	
+	/**
+	 * Returns the distance between this entity and the player.
+	 * @return Distance (float)
+	 */
 	protected float distanceToPlayer() {
-		Player p = main.getPlayer();
+		Player p = world.getPlayer();
 		return (float)Math.abs(Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)));
+	}
+	
+	/**
+	 * Finds the sound source with the longest time since used, then sends the specified sound buffer to that source. Set pitchChange to true if you want random pitch.
+	 * @param buffer Soundbuffer id
+	 * @param pitchChange Enables random pitch (range = 0.9 - 1.1)
+	 */
+	public void playSound(int buffer, boolean pitchChange) {
+		int sourceNumber = 0;
+		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
+			if(sources[i].timeSinceUsed > sources[sourceNumber].timeSinceUsed) sourceNumber = i;
+		}
+		
+		if(pitchChange) sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.2f);
+		sources[sourceNumber].play(buffer);
+	}
+	
+	/**
+	 * Finds the sound source with the longest time since used, then sends the specified sound buffer to that source. Set pitchChange to true if you want random pitch. Allows you to set the gain.
+	 * @param buffer Soundbuffer id
+	 * @param pitchChange Enables random pitch (range = 0.9 - 1.1)
+	 * @param gain Sets the gain of the source
+	 */
+	public void playSound(int buffer, boolean pitchChange, float gain) {
+		int sourceNumber = 0;
+		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
+			if(sources[i].timeSinceUsed > sources[sourceNumber].timeSinceUsed) sourceNumber = i;
+		}
+		
+		sources[sourceNumber].setGain(gain);
+		if(pitchChange) sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.2f);
+		sources[sourceNumber].play(buffer);
 	}
 	
 	public float getX() {

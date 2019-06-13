@@ -1,6 +1,6 @@
 package com.zurragamez.src.entities.particles;
 
-import com.zurragamez.src.Main;
+import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;
 
@@ -18,7 +18,7 @@ public class Particle extends EntitySprite {
 	private boolean landed = false;
 	
 	public Particle(float x, float y, float scale, Sprite sprite) {
-		super(x, y, scale, false, sprite);
+		super(x, y, scale, false, false, sprite);
 		
 		disableFog = false;
 	}
@@ -52,11 +52,11 @@ public class Particle extends EntitySprite {
 			velZ *= -bounciness;
 		}
 
-		if((int)x < 0 || (int)x >= Main.mapWidth || (int)y < 0 || (int)y >= Main.mapHeight) remove = true;
+		if((int)x < 0 || (int)x >= World.mapWidth || (int)y < 0 || (int)y >= World.mapHeight) remove = true;
 	}
 	
 	public void checkCollision() {
-		if(Main.map[(int)(x)][(int)(y)] != 0) {
+		if(World.map[(int)(x)][(int)(y)] != 0) {
 			float dx = x - (int)x;
 			float dy = y - (int)y;
 			float ax = 1 - dx;
