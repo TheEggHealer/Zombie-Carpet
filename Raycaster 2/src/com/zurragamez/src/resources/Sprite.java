@@ -13,6 +13,8 @@ import com.zurragamez.src.Main;
 public class Sprite {
 	private static final String TAG = "Sprite";
 	
+//	private static Random random = new Random();
+	
 	public BufferedImage image;
 	public int width, height;
 	public String path;
@@ -27,10 +29,11 @@ public class Sprite {
 	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
 	public static Sprite wall_wood = new Sprite(64, 64, true, "/walls/planks01.png");
 	
-	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
-	
 	//Objects
 	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
+	
+	//Particles
+	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
 	
 	public Sprite(int width, int height, boolean getPixels, String path) {
 		this.width = width;

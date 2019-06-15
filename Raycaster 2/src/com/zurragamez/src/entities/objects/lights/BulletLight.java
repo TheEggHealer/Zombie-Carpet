@@ -14,7 +14,7 @@ public class BulletLight extends Light {
 		this.projectile = projectile;
 		nearRadius = 7;
 		this.blurRadius = 30;
-		this.brightness = 1f;
+		this.brightness = 0.1f;
 	}
 	
 	public void update() {
