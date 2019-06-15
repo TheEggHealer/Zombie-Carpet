@@ -27,7 +27,7 @@ public class Main extends Canvas implements Runnable {
 	private static boolean running = false;
 	
 	public static boolean useMouseMovement = true;
-	public static boolean debug = true;
+	public static boolean debug = false;
 	
 	private Thread thread;
 	private World world;

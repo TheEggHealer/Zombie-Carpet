@@ -1,5 +1,7 @@
 package com.zurragamez.src.entities;
 
+import com.zurragamez.src.entities.particles.ParticleGore;
+import com.zurragamez.src.entities.particles.ParticleSmoke;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
 import com.zurragamez.src.resources.audio.Source;
@@ -65,6 +67,12 @@ public class Zombie extends EntityMonster {
 	
 	public void die() {
 		setSprite(Sprite.zombie_2dead);
+		
+		world.addEntity(new ParticleGore(x, y));
+		world.addEntity(new ParticleGore(x, y));
+		world.addEntity(new ParticleGore(x, y));
+		world.addEntity(new ParticleGore(x, y));
+		world.addEntity(new ParticleGore(x, y));
 	}
 	
 }

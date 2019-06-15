@@ -34,6 +34,7 @@ public class Sprite {
 	
 	//Particles
 	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
+	public static Sprite particle_gore = new Sprite(8, 8, true, "/particles/gore.png");
 	
 	public Sprite(int width, int height, boolean getPixels, String path) {
 		this.width = width;
