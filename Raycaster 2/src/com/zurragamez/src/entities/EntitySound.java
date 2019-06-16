@@ -19,7 +19,6 @@ public class EntitySound {
 		
 		source.setLocation(x, y);
 		source.play(soundbuffer);
-		System.out.println(source.isPlaying());
 	}
 	
 	public void update() {

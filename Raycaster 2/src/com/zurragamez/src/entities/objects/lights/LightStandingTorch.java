@@ -5,6 +5,8 @@ import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
 
 public class LightStandingTorch extends Light {
+	private static final String TAG = "EnsitySprite>Light>LightStandingTorch";
+	
 	private int flickerCooldown = 4;
 	private int smokeCooldown = 4;
 	private int soundCooldown = random.nextInt(400) + 40;
@@ -16,8 +18,8 @@ public class LightStandingTorch extends Light {
 		setSources(1);
 		nearRadius = 7;
 		
-		sound_flame1 = AudioMaster.loadSound("res/sounds/other/flame_01.ogg");
-		sound_flame2 = AudioMaster.loadSound("res/sounds/other/flame_02.ogg");
+		sound_flame1 = AudioMaster.flame_01;
+		sound_flame2 = AudioMaster.flame_02;
 	}
 	
 	public void update() {

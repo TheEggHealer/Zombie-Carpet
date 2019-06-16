@@ -24,7 +24,7 @@ public class Camera {
 	private float[] zBuffer = new float[Main.DRAW_WIDTH];
 	
 	private World world;
-	
+		
 	public Camera(World world) {
 		this.world = world;
 		
@@ -171,7 +171,7 @@ public class Camera {
 		float invDet = (float)(1.0 / (planeX * dirX - dirY * planeY));
 		float transformX = (float)(invDet * (dirX * spriteX - dirY * spriteY));
 		float transformY = (float)(invDet * (-planeY * spriteX + planeX * spriteY));
-		int hoverHeight = (int)((e.isOnGround() ? (e.getSprite().height * (1f - e.getScale()) / transformY) : ((e.getHoverHeight() / transformY))) * (Main.HEIGHT / (e.getSprite().height * 2f)));
+		int hoverHeight = (int)((e.isOnGround() ? (e.getSpriteSize() * (1f - e.getScale()) / transformY) : ((e.getHoverHeight() / transformY))) * (Main.HEIGHT / (e.getSpriteSize() * 2f)));
 	
 		int spriteScreenX = (int)((Main.DRAW_WIDTH / 2) * (1 + transformX / transformY));
 		
@@ -196,18 +196,20 @@ public class Camera {
 		float lightG = 1 + World.brightness[(int) e.getX()][(int) e.getY()] * warmG;
 		float lightB = 1 + World.brightness[(int) e.getX()][(int) e.getY()] * warmB;
 		
+		Sprite sprite = e.getSprite(e.getRelativeDirection());
+		
 		for(int stripe = drawStartX; stripe < drawEndX; stripe++) {
 			if(spriteScreenX > 0 && spriteScreenX < Main.DRAW_WIDTH) {
-				int texX = (int)((stripe - (spriteScreenX - spriteWidth / 2)) / (float)spriteWidth * e.getSprite().width);
+				int texX = (int)((stripe - (spriteScreenX - spriteWidth / 2)) / (float)spriteWidth * e.getSpriteSize());
 				if(transformY > 0 && stripe > 0 && stripe < Main.DRAW_WIDTH && transformY < zBuffer[stripe]) {
 					for(int y = drawStartY; y < drawEndY; y++) {
 						float d = ((y - hoverHeight) - (Main.HEIGHT / 2 - spriteHeight / 2)) / (float)spriteHeight;
-						int texY = (int)(d * e.getSprite().height);
+						int texY = (int)(d * e.getSpriteSize());
 						
-						int pixel = e.getSprite().pixels[texX + texY * e.getSprite().width];
+						int pixel = sprite.pixels[texX + texY * e.getSpriteSize()];
 						int bufferedPixel = world.main.getPixels()[stripe + y * Main.DRAW_WIDTH];
 						if(pixel != 0xffff00ff) {
-							float alpha = (e.getSprite().pixels[texX + texY * e.getSprite().width] >> 24 & 0xff) / 255f;
+							float alpha = (sprite.pixels[texX + texY * e.getSpriteSize()] >> 24 & 0xff) / 255f;
 							
 							//				Entity Color 														Alpha
 							float r = clamp(((pixel & 0xff0000) >> 16) * alpha * darkness * lightR		+		((bufferedPixel & 0xff0000) >> 16) * (1f -  alpha), 0, 255);

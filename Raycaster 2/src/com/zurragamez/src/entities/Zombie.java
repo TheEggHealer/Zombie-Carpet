@@ -12,13 +12,15 @@ public class Zombie extends EntityMonster {
 	private int sound_shoot1;
 	
 	public Zombie(float x, float y) {
-		super(x, y, 0.6f, true, Sprite.zombie_2);
-		hoverHeight = sprite.height;
+		super(x, y, 0.8f, true);
+		hoverHeight = spriteSize;
+
+		initSprites(true, Sprite.zombie_sheet[0], Sprite.zombie_sheet[1], Sprite.zombie_sheet[2], Sprite.zombie_sheet[3]);
 		
 		//TODO: Use sources[] instead
 		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
-		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
+		sound_shoot1 = AudioMaster.player_shoot;
 		
 		ai_roam = true;
 		ai_followPlayer = true;
@@ -30,18 +32,18 @@ public class Zombie extends EntityMonster {
 		sound_living = true;
 		sound_hurt = true;
 		sound_walk = true;
-		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_01.ogg"));
-		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_02.ogg"));
-		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_03.ogg"));
-		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_04.ogg"));
-		soundBuffers_living.add(AudioMaster.loadSound("res/sounds/zombie_05.ogg"));
-		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_01.ogg"));
-		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_02.ogg"));
-		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_03.ogg"));
-		soundBuffers_hurt.add(AudioMaster.loadSound("res/sounds/zombie_hurt_04.ogg"));
-		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk.ogg"));
-		soundBuffers_walk.add(AudioMaster.loadSound("res/sounds/player/walk2.ogg"));
-		sound_death = AudioMaster.loadSound("res/sounds/gore.ogg");
+		soundBuffers_living.add(AudioMaster.zombie_01);
+		soundBuffers_living.add(AudioMaster.zombie_02);
+		soundBuffers_living.add(AudioMaster.zombie_03);
+		soundBuffers_living.add(AudioMaster.zombie_04);
+		soundBuffers_living.add(AudioMaster.zombie_05);
+		soundBuffers_hurt.add(AudioMaster.zombie_hurt_01);
+		soundBuffers_hurt.add(AudioMaster.zombie_hurt_02);
+		soundBuffers_hurt.add(AudioMaster.zombie_hurt_03);
+		soundBuffers_hurt.add(AudioMaster.zombie_hurt_04);
+		soundBuffers_walk.add(AudioMaster.walk_01);
+		soundBuffers_walk.add(AudioMaster.walk_02);
+		sound_death = AudioMaster.zombie_death_01;
 	}
 
 	public void update() {
@@ -64,7 +66,7 @@ public class Zombie extends EntityMonster {
 	}
 	
 	public void die() {
-		setSprite(Sprite.zombie_2dead);
+		setSprite(Sprite.zombie_2dead, 0);
 	}
 	
 }

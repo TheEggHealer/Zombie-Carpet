@@ -18,9 +18,13 @@ public class EntitySprite {
 	protected float hoverHeight;
 	protected boolean onGround;
 	protected boolean remove = false;
-	protected Sprite sprite;
 	protected World world;
 	protected static Random random = new Random();
+
+	protected boolean directional = true;
+	protected float lookDirection;
+	protected Sprite[] sprites;
+	protected int spriteSize;
 	
 	protected float nearRadius;
 	
@@ -29,12 +33,13 @@ public class EntitySprite {
 	protected boolean hasSound = false;
 	protected Source[] sources = new Source[AMOUNT_OF_SOURCES];
 
-	public EntitySprite(float x, float y, float scale, boolean onGround, boolean hasSound, Sprite sprite) {
+	public EntitySprite(float x, float y, float scale, boolean onGround, boolean hasSound) {
 		this.x = x;
 		this.y = y;
 		this.scale = scale;
 		this.onGround = onGround;
-		setSprite(sprite);
+		
+		sprites = new Sprite[4];
 		
 		this.hasSound = hasSound;
 		if(hasSound) {
@@ -46,6 +51,12 @@ public class EntitySprite {
 	
 	public void init(World world) {
 		this.world = world;
+	}
+	
+	public void initSprites(boolean directional, Sprite... sprites) {
+		this.directional = directional;
+		this.spriteSize = sprites[0].height;
+		this.sprites = sprites;
 	}
 	
 	public void setSources(int amount) {
@@ -141,6 +152,11 @@ public class EntitySprite {
 		return (float)Math.abs(Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)));
 	}
 	
+	protected float angleToPlayer() {
+		Player p = world.getPlayer();
+		return (float)Math.atan2(p.y - y, p.x - x);
+	}
+	
 	/**
 	 * Finds the sound source with the longest time since used, then sends the specified sound buffer to that source. Set pitchChange to true if you want random pitch.
 	 * @param buffer Soundbuffer id
@@ -189,12 +205,25 @@ public class EntitySprite {
 		return hoverHeight;
 	}
 	
-	public Sprite getSprite() {
-		return sprite;
+	public Sprite getSprite(int direction) {
+		return sprites[direction];
 	}
 	
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
+	public void setSprite(Sprite sprite, int direction) {
+		this.sprites[direction] = sprite;
+	}
+	
+	public int getSpriteSize() {
+		return spriteSize;
+	}
+	
+	public int getRelativeDirection() {
+		if(directional) {
+			float a = angleToPlayer() - lookDirection;
+			int r = (int)Math.round(((a + Math.PI) % (Math.PI * 2)) / (Math.PI / 2)) % 4;
+			return r;
+		}
+		return 0;
 	}
 	
 	public boolean isOnGround() {

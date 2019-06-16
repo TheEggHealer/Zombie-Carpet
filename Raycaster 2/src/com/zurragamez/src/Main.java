@@ -27,13 +27,14 @@ public class Main extends Canvas implements Runnable {
 	private static boolean running = false;
 	
 	public static boolean useMouseMovement = true;
-	public static boolean debug = true;
+	public static boolean debug = false;
 	
 	private Thread thread;
 	private World world;
 	
 	public static int res = 5; // 5
 	public static final int DRAW_WIDTH = Main.WIDTH / res;
+	public static final int DRAW_HEIGHT = Main.HEIGHT / res;
 	private BufferedImage screen = new BufferedImage(DRAW_WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) screen.getRaster().getDataBuffer()).getData();
 	

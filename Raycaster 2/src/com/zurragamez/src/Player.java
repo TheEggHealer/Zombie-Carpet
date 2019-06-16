@@ -23,7 +23,7 @@ public class Player {
 	private World world;
 	private Camera camera;
 	
-	private int sound_walk1, sound_walk2, sound_shoot1, damage_player1;
+	private int sound_walk1, sound_walk2, sound_shoot1;
 	private int walkCooldown = 10;
 	private Source walkingSource;
 	private Source shootingSource;
@@ -43,11 +43,9 @@ public class Player {
 		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
 		hurtSource = new Source(TAG);
-		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
-		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
-		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
-		
-		damage_player1 = AudioMaster.loadSound("res/sounds/player/death.ogg");
+		sound_walk1 = AudioMaster.walk_01;
+		sound_walk2 = AudioMaster.walk_02;
+		sound_shoot1 = AudioMaster.player_shoot;
 	}
 	
 	public void update() {
@@ -69,7 +67,7 @@ public class Player {
 	
 	public void hurt(EntitySprite ent, float damage) {
 		hurtSource.setLocation(x, y);
-		hurtSource.play(damage_player1);
+		//hurtSource.play(damage_player1);
 		world.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
 	}
 	

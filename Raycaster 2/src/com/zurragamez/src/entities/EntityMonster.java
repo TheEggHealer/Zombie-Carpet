@@ -25,8 +25,9 @@ public class EntityMonster extends EntitySprite {
 	
 	protected int walkCooldown = 10;
 	
-	public EntityMonster(float x, float y, float scale, boolean onGround, Sprite sprite) {
-		super(x, y, scale, onGround, true, sprite); 
+	public EntityMonster(float x, float y, float scale, boolean onGround) {
+		super(x, y, scale, onGround, true);
+		
 		maxTimeSinceSound = 1800;
 		minTimeSinceSound = 400;
 		timeSinceSound = minTimeSinceSound + random.nextInt(maxTimeSinceSound - minTimeSinceSound);

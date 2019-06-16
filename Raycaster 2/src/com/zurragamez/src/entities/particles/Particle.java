@@ -18,7 +18,8 @@ public class Particle extends EntitySprite {
 	private boolean landed = false;
 	
 	public Particle(float x, float y, float scale, Sprite sprite) {
-		super(x, y, scale, false, false, sprite);
+		super(x, y, scale, false, false);
+		initSprites(false, sprite);
 		
 		disableFog = false;
 	}
@@ -35,8 +36,8 @@ public class Particle extends EntitySprite {
 			hoverHeight += velZ;
 		}
 		
-		if(hoverHeight > sprite.height * (1f - scale)){
-			hoverHeight = sprite.height * (1f - scale);
+		if(hoverHeight > spriteSize * (1f - scale)){
+			hoverHeight = spriteSize * (1f - scale);
 			velX *= 0.2f;
 			velY *= 0.2f;
 			if(Math.abs(velZ) < 0.1f) {
@@ -45,8 +46,8 @@ public class Particle extends EntitySprite {
 			else velZ *= -bounciness;
 		}
 		
-		if(hoverHeight < -(sprite.height * (1f - scale))){
-			hoverHeight = -(sprite.height * (1f - scale));
+		if(hoverHeight < -(spriteSize * (1f - scale))){
+			hoverHeight = -(spriteSize * (1f - scale));
 			velX *= 0.2f;
 			velY *= 0.2f;
 			velZ *= -bounciness;
@@ -79,9 +80,9 @@ public class Particle extends EntitySprite {
 		}
 	}
 	
-	public void setSprite(Sprite sprite) {
-		super.setSprite(sprite);
-		gravity = GRAVITY_BASE * sprite.height;
+	public void initSprites(boolean directional, Sprite... sprites) {
+		super.initSprites(directional, sprites);
+		gravity = GRAVITY_BASE * spriteSize;
 	}
 	
 }
