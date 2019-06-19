@@ -2,6 +2,7 @@ package com.zurragamez.src;
 import java.util.Random;
 
 import com.zurragamez.src.entities.EntitySprite;
+import com.zurragamez.src.entities.particles.ParticleAmbient;
 import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
@@ -20,10 +21,12 @@ public class Player {
 	private float speed = 0.03f;
 	private float rotSpeed = 0.04f;
 	
+	private int ambientParticleCooldown = 4;
+	
 	private World world;
 	private Camera camera;
 	
-	private int sound_walk1, sound_walk2, sound_shoot1, damage_player1;
+	private int sound_walk1, sound_walk2, sound_shoot1;
 	private int walkCooldown = 10;
 	private Source walkingSource;
 	private Source shootingSource;
@@ -43,11 +46,9 @@ public class Player {
 		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
 		hurtSource = new Source(TAG);
-		sound_walk1 = AudioMaster.loadSound("res/sounds/player/walk.ogg");
-		sound_walk2 = AudioMaster.loadSound("res/sounds/player/walk2.ogg");
-		sound_shoot1 = AudioMaster.loadSound("res/sounds/shoot.ogg");
-		
-		damage_player1 = AudioMaster.loadSound("res/sounds/player/death.ogg");
+		sound_walk1 = AudioMaster.walk_01;
+		sound_walk2 = AudioMaster.walk_02;
+		sound_shoot1 = AudioMaster.player_shoot;
 	}
 	
 	public void update() {
@@ -57,7 +58,6 @@ public class Player {
 		movement();
 		
 		if(Keyboard.shoot || Mouse.button == 1) {
-			//Keyboard.shoot = false;
 			Mouse.button = 0;
 			
 			shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
@@ -65,11 +65,20 @@ public class Player {
 			
 			world.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
 		}
+		
+		if(--ambientParticleCooldown <= 0) {
+			ambientParticleCooldown = 16;
+			float dir = (float)(this.dir + random.nextFloat() * (Math.PI / 2) - Math.PI / 4);
+			float dist = random.nextFloat() * 6 + 1;
+			float x = (float)Math.cos(dir) * dist + this.x;
+			float y = (float)Math.sin(dir) * dist + this.y;
+			if(world.isWorldCoordinates(x, y)) world.addEntity(new ParticleAmbient(x, y));
+		}
 	}
 	
 	public void hurt(EntitySprite ent, float damage) {
 		hurtSource.setLocation(x, y);
-		hurtSource.play(damage_player1);
+		//hurtSource.play(damage_player1);
 		world.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
 	}
 	

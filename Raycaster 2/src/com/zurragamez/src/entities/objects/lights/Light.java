@@ -19,9 +19,10 @@ public class Light extends EntitySprite {
 	protected List<Integer> bluredTiles = new ArrayList<Integer>();
 	
 	public Light(float x, float y, float scale, boolean onGround, int lightRadius, boolean hasSound, Sprite sprite) {
-		super(x, y, scale, onGround, hasSound, sprite);
+		super(x, y, scale, onGround, hasSound);
 		this.lightRadius = lightRadius;
 		
+		initSprites(Sprite.object_light);
 		setupLight();
 	}
 	

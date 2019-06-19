@@ -21,10 +21,12 @@ public class Projectile extends EntitySprite {
 	private Random random = new Random();
 	
 	public Projectile(float x, float y, float direction, float scale, Sprite sprite) {
-		super(x, y, 0.05f, false, false, sprite);
+		super(x, y, 0.05f, false, false);
+		initSprites(sprite);
+		
 		this.dir = direction + (random.nextFloat()-0.5f) * 0.04f;
 		this.speed = 0.2f;
-		soundID = AudioMaster.sus;
+		soundID = AudioMaster.walk_01;
 		
 		hoverHeight = 10;
 		heightChange = random.nextFloat() * 2f - 1;
@@ -44,12 +46,14 @@ public class Projectile extends EntitySprite {
 		
 		hoverHeight -= heightChange;
 		
-		if(x < 0 || x > World.mapWidth-1 || y < 0 || y > World.mapHeight-1) remove = true;
+		if(!world.isWorldCoordinates(x, y)) remove = true;
 
 		if(World.map[(int)(x)][(int)(y)] != 0) {
 			for(int i = 0; i < 1; i++) {
-				world.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), World.map[(int)(x)][(int)(y)]));
-				world.addSound(new EntitySound((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), soundID));
+				if(distanceToPlayer() <= 10) {
+					world.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), World.map[(int)(x)][(int)(y)]));
+					world.addSound(new EntitySound((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), soundID));
+				}
 			}
 			remove = true;
 		}

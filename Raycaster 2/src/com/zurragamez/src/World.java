@@ -43,7 +43,7 @@ public class World {
 			floor = loadMap("maps/" + mapName + "_floor.txt");
 			roof = loadMap("maps/" + mapName + "_roof.txt");
 			brightness = loadBrightness("maps/" + mapName + "_brightness.txt");
-			loadEntities("maps/" + mapName + "_entities.txt");
+//			loadEntities("maps/" + mapName + "_entities.txt");
 			
 		} catch (IOException e) {
 			System.err.println("Failed to load map");
@@ -207,6 +207,11 @@ public class World {
 	 */
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public boolean isWorldCoordinates(float x, float y) {
+		if(x < 0 || x > mapWidth-1 || y < 0 || y > mapHeight-1) return false;
+		return true;
 	}
 	
 	/**

@@ -31,15 +31,27 @@ import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 
+import com.zurragamez.src.Main;
 import com.zurragamez.src.Player;
 
 public class AudioMaster {
+	private static final String TAG = "AudioMaster";
 	
 	public static int sus;
+	
+	public static int walk_01, walk_02;
+	
+	public static int zombie_01, zombie_02, zombie_03, zombie_04, zombie_05;
+	public static int zombie_hurt_01, zombie_hurt_02, zombie_hurt_03, zombie_hurt_04;
+	public static int zombie_death_01;
+	public static int flame_01, flame_02;
+	
+	public static int player_shoot;
+	
 	private static long device;
 	private static long context;
 	private static ALCCapabilities alcCapabilities;
-	private static ALCapabilities alCapabilities;
+//	private static ALCapabilities alCapabilities;
 	
 	public static List<Integer> buffers = new ArrayList<Integer>();
 	
@@ -51,7 +63,7 @@ public class AudioMaster {
 		alcMakeContextCurrent(context);
 		
 		alcCapabilities = ALC.createCapabilities(device);
-		alCapabilities = AL.createCapabilities(alcCapabilities);
+		AL.createCapabilities(alcCapabilities);
 	}
 	
 	public static void destroy() {
@@ -74,14 +86,32 @@ public class AudioMaster {
 		orientation.put(4, 0);
 		orientation.put(5, 1);
 		AL10.alListenerfv(AL10.AL_ORIENTATION, orientation);
-		AL10.alListener3f(AL10.AL_POSITION, player.x, player.y, 0);
+		AL10.alListener3f(AL10.AL_POSITION, player.x, player.y, 0.5f);
 	}
 	
 	public static void loadSounds() {
-		sus = AudioMaster.loadSound("res/sounds/other/flame_01.ogg");
+		sus = AudioMaster.loadSound("self", "res/sounds/other/flame_01.ogg");
+		
+		walk_01 = AudioMaster.loadSound("self", "res/sounds/player/walk.ogg");
+		walk_02 = AudioMaster.loadSound("self", "res/sounds/player/walk2.ogg");
+		
+		zombie_01 = AudioMaster.loadSound("self", "res/sounds/zombie_01.ogg");
+		zombie_02 = AudioMaster.loadSound("self", "res/sounds/zombie_02.ogg");
+		zombie_03 = AudioMaster.loadSound("self", "res/sounds/zombie_03.ogg");
+		zombie_04 = AudioMaster.loadSound("self", "res/sounds/zombie_04.ogg");
+		zombie_05 = AudioMaster.loadSound("self", "res/sounds/zombie_05.ogg");
+		zombie_hurt_01 = AudioMaster.loadSound("self", "res/sounds/zombie_hurt_01.ogg");
+		zombie_hurt_02 = AudioMaster.loadSound("self", "res/sounds/zombie_hurt_02.ogg");
+		zombie_hurt_03 = AudioMaster.loadSound("self", "res/sounds/zombie_hurt_03.ogg");
+		zombie_hurt_04 = AudioMaster.loadSound("self", "res/sounds/zombie_hurt_04.ogg");
+		zombie_death_01 = AudioMaster.loadSound("self", "res/sounds/gore.ogg");
+		flame_01 = AudioMaster.loadSound("self", "res/sounds/other/flame_01.ogg");
+		flame_02 = AudioMaster.loadSound("self", "res/sounds/other/flame_02.ogg");
+		
+		player_shoot = AudioMaster.loadSound("self", "res/sounds/shoot.ogg");
 	}
 	
-	public static int loadSound(String path) {
+	public static int loadSound(String tag, String path) {
 		stackPush();
 		IntBuffer channelsBuffer = stackMallocInt(1); 
 		stackPush();
@@ -107,6 +137,7 @@ public class AudioMaster {
 		
 		free(rawAudioBuffer);
 		
+		Main.printDebug(tag + "->" + TAG, "Loaded sound: " + path + " successfully");
 		return bufferPointer;
 	}
 

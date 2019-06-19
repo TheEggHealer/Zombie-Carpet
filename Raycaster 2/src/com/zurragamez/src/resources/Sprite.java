@@ -29,6 +29,9 @@ public class Sprite {
 	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
 	public static Sprite wall_wood = new Sprite(64, 64, true, "/walls/planks01.png");
 	
+	//Monsters
+	public static Sprite[] zombie_sheet = loadSpriteSheet(32, 32, 128, 32, "/entities/zombies/zombies (32x32).png");
+	
 	//Objects
 	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
 	
@@ -58,9 +61,9 @@ public class Sprite {
 				image.getRGB(0, 0, width, height, pixels, 0, width);
 			}
 			
-			Main.printDebug(TAG, "Loaded: " + path + " successfully.");
+			Main.printDebug(TAG, "Loaded sprite: " + path + " successfully.");
 		} catch(IOException e) {
-			Main.printDebugErr(TAG, "Failed to load: " + path);
+			Main.printDebugErr(TAG, "Failed to load sprite: " + path);
 			e.printStackTrace();
 		}
 	}
@@ -73,7 +76,7 @@ public class Sprite {
 			}
 		}
 		
-		Main.printDebug(TAG, "Created a sub sprite from: " + this.toString());
+		Main.printDebug(TAG, "Created a sub sprite from: " + this.path + ", at x: " + x + ", y: " + y + ", w: " + width + ", h: " + height);
 		return new Sprite(width, height, pixels);
 	}
 	
@@ -87,7 +90,7 @@ public class Sprite {
 			}
 		}
 		
-		Main.printDebug(TAG, "Created a sub sprite from: " + this.toString());
+		Main.printDebug(TAG, "Created a sub sprite from: " + this.path + ", at x: " + x + ", y: " + y + ", w: " + width + ", h: " + height);
 		return new Sprite(customWidth, customHeight, pixels);
 	}
 	
@@ -99,6 +102,22 @@ public class Sprite {
 		
 		Main.printDebug(TAG, "Generated a new sprite");
 		return new Sprite(width, height, pixels);
+	}
+	
+	public static Sprite[] loadSpriteSheet(int spriteWidth, int spriteHeight, int sheetWidth, int sheetHeight, String path) {
+		int w = (sheetWidth / spriteWidth);
+		int h = (sheetHeight / spriteHeight);
+		Sprite[] sprites = new Sprite[w * h];
+		Sprite sheet = new Sprite(sheetWidth, sheetHeight, true, path);
+		
+		for(int y = 0; y < h; y++) {
+			for(int x = 0; x < w; x++) {
+				sprites[x + y * w] = sheet.subSprite(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight);
+			}
+		}
+		
+		Main.printDebug(TAG, "Loaded spritesheet with " + w*h  + " sprites from: " + path);
+		return sprites;
 	}
 	
 	public static BufferedImage deepCopy(BufferedImage bi) {
