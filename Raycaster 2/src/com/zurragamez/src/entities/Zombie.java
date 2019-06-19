@@ -17,7 +17,7 @@ public class Zombie extends EntityMonster {
 		super(x, y, 0.8f, true);
 		hoverHeight = spriteSize;
 
-		initSprites(true, Sprite.zombie_sheet[0], Sprite.zombie_sheet[1], Sprite.zombie_sheet[2], Sprite.zombie_sheet[3]);
+		initSprites(Sprite.zombie_sheet[0], Sprite.zombie_sheet[1], Sprite.zombie_sheet[2], Sprite.zombie_sheet[3]);
 		
 		//TODO: Use sources[] instead
 		shootingSource = new Source(TAG);
@@ -76,5 +76,5 @@ public class Zombie extends EntityMonster {
 		world.addEntity(new ParticleGore(x, y));
 		world.addEntity(new ParticleGore(x, y));
 	}
-	
+
 }

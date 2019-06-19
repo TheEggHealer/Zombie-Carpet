@@ -22,7 +22,7 @@ public class Projectile extends EntitySprite {
 	
 	public Projectile(float x, float y, float direction, float scale, Sprite sprite) {
 		super(x, y, 0.05f, false, false);
-		initSprites(false, sprite);
+		initSprites(sprite);
 		
 		this.dir = direction + (random.nextFloat()-0.5f) * 0.04f;
 		this.speed = 0.2f;
@@ -46,7 +46,7 @@ public class Projectile extends EntitySprite {
 		
 		hoverHeight -= heightChange;
 		
-		if(x < 0 || x > World.mapWidth-1 || y < 0 || y > World.mapHeight-1) remove = true;
+		if(!world.isWorldCoordinates(x, y)) remove = true;
 
 		if(World.map[(int)(x)][(int)(y)] != 0) {
 			for(int i = 0; i < 1; i++) {

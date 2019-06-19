@@ -19,7 +19,7 @@ public class Particle extends EntitySprite {
 	
 	public Particle(float x, float y, float scale, Sprite sprite) {
 		super(x, y, scale, false, false);
-		initSprites(false, sprite);
+		initSprites(sprite);
 		
 		disableFog = false;
 	}
@@ -53,7 +53,7 @@ public class Particle extends EntitySprite {
 			velZ *= -bounciness;
 		}
 
-		if((int)x < 0 || (int)x >= World.mapWidth || (int)y < 0 || (int)y >= World.mapHeight) remove = true;
+		if(!world.isWorldCoordinates(x, y)) remove = true;
 	}
 	
 	public void checkCollision() {
@@ -80,8 +80,8 @@ public class Particle extends EntitySprite {
 		}
 	}
 	
-	public void initSprites(boolean directional, Sprite... sprites) {
-		super.initSprites(directional, sprites);
+	public void initSprites(Sprite... sprites) {
+		super.initSprites(sprites);
 		gravity = GRAVITY_BASE * spriteSize;
 	}
 	

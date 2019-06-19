@@ -53,8 +53,8 @@ public class EntitySprite {
 		this.world = world;
 	}
 	
-	public void initSprites(boolean directional, Sprite... sprites) {
-		this.directional = directional;
+	public void initSprites(Sprite... sprites) {
+		this.directional = sprites.length > 1;
 		this.spriteSize = sprites[0].height;
 		this.sprites = sprites;
 	}

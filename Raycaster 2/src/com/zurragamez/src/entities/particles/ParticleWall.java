@@ -9,10 +9,10 @@ public class ParticleWall extends Particle {
 		
 		switch(wallId) {
 			case 1:
-				initSprites(false, Sprite.wall_stone.subSprite(random.nextInt(59), random.nextInt(59), 5, 5, 256, 256)); 
+				initSprites(Sprite.wall_stone.subSprite(random.nextInt(59), random.nextInt(59), 5, 5, 256, 256)); 
 				break;
 			case 2:
-				initSprites(false, Sprite.wall_wood.subSprite(random.nextInt(59), random.nextInt(59), 5, 5, 256, 256));
+				initSprites(Sprite.wall_wood.subSprite(random.nextInt(59), random.nextInt(59), 5, 5, 256, 256));
 				break;
 		}
 		

@@ -2,6 +2,7 @@ package com.zurragamez.src;
 import java.util.Random;
 
 import com.zurragamez.src.entities.EntitySprite;
+import com.zurragamez.src.entities.particles.ParticleAmbient;
 import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
@@ -19,6 +20,8 @@ public class Player {
 	
 	private float speed = 0.03f;
 	private float rotSpeed = 0.04f;
+	
+	private int ambientParticleCooldown = 4;
 	
 	private World world;
 	private Camera camera;
@@ -55,13 +58,21 @@ public class Player {
 		movement();
 		
 		if(Keyboard.shoot || Mouse.button == 1) {
-			//Keyboard.shoot = false;
 			Mouse.button = 0;
 			
 			shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
 			shootingSource.play(sound_shoot1);
 			
 			world.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
+		}
+		
+		if(--ambientParticleCooldown <= 0) {
+			ambientParticleCooldown = 16;
+			float dir = (float)(this.dir + random.nextFloat() * (Math.PI / 2) - Math.PI / 4);
+			float dist = random.nextFloat() * 6 + 1;
+			float x = (float)Math.cos(dir) * dist + this.x;
+			float y = (float)Math.sin(dir) * dist + this.y;
+			if(world.isWorldCoordinates(x, y)) world.addEntity(new ParticleAmbient(x, y));
 		}
 	}
 	

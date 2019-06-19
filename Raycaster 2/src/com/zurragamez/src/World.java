@@ -209,6 +209,11 @@ public class World {
 		return player;
 	}
 	
+	public boolean isWorldCoordinates(float x, float y) {
+		if(x < 0 || x > mapWidth-1 || y < 0 || y > mapHeight-1) return false;
+		return true;
+	}
+	
 	/**
 	 * Returns a list containing all of the entities in the game, in the form of EntitySprite.
 	 * @return List of EntitySprites

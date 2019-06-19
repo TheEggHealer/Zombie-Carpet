@@ -22,7 +22,7 @@ public class Light extends EntitySprite {
 		super(x, y, scale, onGround, hasSound);
 		this.lightRadius = lightRadius;
 		
-		initSprites(false, Sprite.object_light);
+		initSprites(Sprite.object_light);
 		setupLight();
 	}
 	
