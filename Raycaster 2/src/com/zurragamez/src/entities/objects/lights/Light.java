@@ -6,14 +6,15 @@ import java.util.List;
 import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;
+import com.zurragamez.src.utils.Constants;
 
 public class Light extends EntitySprite {
 	
 	protected int lightRadius;
-	protected int rays = 200;
-	protected int blurRadius = 3;
-	protected int blurQuality = 4;
-	protected float brightness = 1;
+	protected int rays = Constants.LIGHT_RAYS;
+	protected int blurRadius = Constants.LIGHT_BLUR_RADIUS;
+	protected int blurQuality = Constants.LIGHT_BLUR_QUALITY;
+	protected float brightness = Constants.LIGHT_BRIGHTNESS;
 
 	protected List<Integer> affectedTiles = new ArrayList<Integer>();
 	protected List<Integer> bluredTiles = new ArrayList<Integer>();

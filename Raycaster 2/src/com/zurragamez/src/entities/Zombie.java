@@ -1,23 +1,21 @@
 package com.zurragamez.src.entities;
 
 import com.zurragamez.src.entities.particles.ParticleGore;
-import com.zurragamez.src.entities.particles.ParticleSmoke;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
 import com.zurragamez.src.resources.audio.Source;
 
 public class Zombie extends EntityMonster {
 	private static final String TAG = "EntitySprite>EntityMonster>Zombie";
-
-	private float speed = 0.01f;
+	
 	private Source shootingSource;
 	private int sound_shoot1;
 	
 	public Zombie(float x, float y) {
-		super(x, y, 0.8f, true);
+		super(x, y, 0.65f, true);
 		hoverHeight = spriteSize;
 
-		initSprites(Sprite.zombie_sheet[0], Sprite.zombie_sheet[1], Sprite.zombie_sheet[2], Sprite.zombie_sheet[3]);
+		initSprites(Sprite.zombie_sheet[0], Sprite.zombie_sheet[1].flip(), Sprite.zombie_sheet[2].flip(), Sprite.zombie_sheet[3].flip(),  Sprite.zombie_sheet[4],  Sprite.zombie_sheet[3],  Sprite.zombie_sheet[2],  Sprite.zombie_sheet[1]);
 		
 		//TODO: Use sources[] instead
 		shootingSource = new Source(TAG);
@@ -31,9 +29,9 @@ public class Zombie extends EntityMonster {
 		hitRadius = 0.035f;
 		nearRadius = 10;
 		
-		sound_living = true;
-		sound_hurt = true;
-		sound_walk = true;
+		has_sound_living = true;
+		has_sound_hurt = true;
+		has_sound_walk = true;
 		soundBuffers_living.add(AudioMaster.zombie_01);
 		soundBuffers_living.add(AudioMaster.zombie_02);
 		soundBuffers_living.add(AudioMaster.zombie_03);
@@ -68,8 +66,9 @@ public class Zombie extends EntityMonster {
 	}
 	
 	public void die() {
-		setSprite(Sprite.zombie_2dead, 0);
+		initSprites(Sprite.zombie_2dead);
 		
+		//TODO: Use for loop instead
 		world.addEntity(new ParticleGore(x, y));
 		world.addEntity(new ParticleGore(x, y));
 		world.addEntity(new ParticleGore(x, y));

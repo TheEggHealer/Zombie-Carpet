@@ -20,31 +20,31 @@ public class Sprite {
 	public String path;
 	public int[] pixels;
 	
-	public static Sprite jeb = new Sprite(32, 32, true, "/test.png");
-	public static Sprite zombie = new Sprite(256, 256, true, "/zombie_fix.png");
-	public static Sprite zombie_2 = new Sprite(256, 256, true, "/entities/zombies/zombie2.png");
-	public static Sprite zombie_2dead = new Sprite(256, 256, true, "/entities/zombies/zombie3.png");
-	public static Sprite ammo = new Sprite(128, 128, true, "/ammo.png");
+	public static Sprite jeb = new Sprite(32, 32, false, "/test.png");
+	public static Sprite zombie = new Sprite(256, 256, false, "/zombie_fix.png");
+	public static Sprite zombie_2 = new Sprite(256, 256, false, "/entities/zombies/zombie2.png");
+	public static Sprite zombie_2dead = new Sprite(256, 256, false, "/entities/zombies/zombie3.png");
+	public static Sprite ammo = new Sprite(128, 128, false, "/ammo.png");
 	
-	public static Sprite wall_stone = new Sprite(64, 64, true, "/walls/stone.png");
-	public static Sprite wall_wood = new Sprite(64, 64, true, "/walls/planks01.png");
+	public static Sprite wall_stone = new Sprite(64, 64, false, "/walls/stone.png");
+	public static Sprite wall_wood = new Sprite(64, 64, false, "/walls/planks01.png");
 	
 	//Monsters
-	public static Sprite[] zombie_sheet = loadSpriteSheet(32, 32, 128, 32, "/entities/zombies/zombies (32x32).png");
+	public static Sprite[] zombie_sheet = loadSpriteSheet(32, 32, 160, 32, "/entities/zombies/zombies (32x32).png");
 	
 	//Objects
-	public static Sprite object_light = new Sprite(64, 64, true, "/entities/objects/light01.png");
+	public static Sprite object_light = new Sprite(64, 64, false, "/entities/objects/light01.png");
 	
 	//Particles
-	public static Sprite particle_blood = new Sprite(32, 32, true, "/particles/blood.png");
-	public static Sprite particle_gore = new Sprite(8, 8, true, "/particles/gore.png");
+	public static Sprite particle_blood = new Sprite(32, 32, false, "/particles/blood.png");
+	public static Sprite particle_gore = new Sprite(8, 8, false, "/particles/gore.png");
 	
-	public Sprite(int width, int height, boolean getPixels, String path) {
+	public Sprite(int width, int height, boolean flip, String path) {
 		this.width = width;
 		this.height = height;
 		this.path = path;
 		pixels = new int[width * height];
-		load(getPixels);
+		load(flip);
 	}
 	
 	private Sprite(int width, int height, int[] pixels) {
@@ -53,13 +53,11 @@ public class Sprite {
 		this.pixels = pixels;
 	}
 	
-	public void load(boolean getPixels) {
+	public void load(boolean flip) {
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream(path));
 			
-			if(getPixels) {
-				image.getRGB(0, 0, width, height, pixels, 0, width);
-			}
+			image.getRGB(0, 0, width, height, pixels, 0, width);
 			
 			Main.printDebug(TAG, "Loaded sprite: " + path + " successfully.");
 		} catch(IOException e) {
@@ -108,7 +106,7 @@ public class Sprite {
 		int w = (sheetWidth / spriteWidth);
 		int h = (sheetHeight / spriteHeight);
 		Sprite[] sprites = new Sprite[w * h];
-		Sprite sheet = new Sprite(sheetWidth, sheetHeight, true, path);
+		Sprite sheet = new Sprite(sheetWidth, sheetHeight, false, path);
 		
 		for(int y = 0; y < h; y++) {
 			for(int x = 0; x < w; x++) {
@@ -118,6 +116,18 @@ public class Sprite {
 		
 		Main.printDebug(TAG, "Loaded spritesheet with " + w*h  + " sprites from: " + path);
 		return sprites;
+	}
+	
+	public Sprite flip() {
+		Sprite s = new Sprite(this.width, this.height, this.pixels.clone());
+		
+		for(int y = 0; y < this.height; y++) {
+			for(int x = 0; x < this.width; x++) {
+				s.pixels[(this.width - x - 1) + y * this.width] = this.pixels[x + y * this.width];
+			}
+		}
+		
+		return s;
 	}
 	
 	public static BufferedImage deepCopy(BufferedImage bi) {

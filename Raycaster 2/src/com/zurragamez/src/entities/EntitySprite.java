@@ -6,6 +6,8 @@ import com.zurragamez.src.Player;
 import com.zurragamez.src.World;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.Source;
+import com.zurragamez.src.utils.Constants;
+import com.zurragamez.src.utils.OpenSimplexNoise;
 
 public class EntitySprite {
 	private static final String TAG = "EntitySprite";
@@ -19,8 +21,10 @@ public class EntitySprite {
 	protected boolean onGround;
 	protected boolean remove = false;
 	protected World world;
+	
 	protected static Random random = new Random();
-
+	protected static OpenSimplexNoise noise = new OpenSimplexNoise();
+	
 	protected boolean directional = true;
 	protected float lookDirection;
 	protected Sprite[] sprites;
@@ -39,6 +43,7 @@ public class EntitySprite {
 		this.scale = scale;
 		this.onGround = onGround;
 		
+		//TODO: Does this need to be initialized?
 		sprites = new Sprite[4];
 		
 		this.hasSound = hasSound;
@@ -53,6 +58,12 @@ public class EntitySprite {
 		this.world = world;
 	}
 	
+	/**
+	 * Sets the sprites for the entity. If more than one is given, the entity becomes a 
+	 * directional one and will change sprite depending on the viewing angle from the player. 
+	 * This does however draw more performance.
+	 * @param sprites You can give this method as many sprites as you want.
+	 */
 	public void initSprites(Sprite... sprites) {
 		this.directional = sprites.length > 1;
 		this.spriteSize = sprites[0].height;
@@ -71,7 +82,7 @@ public class EntitySprite {
 	}
 	
 	/**
-	 * Queues the entity to be removed from the entities list in the Main class.
+	 * Queues the entity to be removed from the entities list in the Main class. Destroys the sources attached to this entity.
 	 */
 	public void remove() {
 		if(hasSound) {
@@ -98,29 +109,32 @@ public class EntitySprite {
 	}
 	
 	/**
-	 * This method gets called 60 times per second, if the player is within it's nearRadius.
+	 * This method gets called 60 times per second, if the player is within it's nearRadius. Usually gets called before update().
 	 */
 	public void updateNear() {
 		
 	}
 	
 	/**
-	 * Tries to move entity by given amount. Stops if collision is detected.
+	 * Tries to move entity by given amount. Acts upon collision.
 	 * @param dx Delta x
 	 * @param dy Delta y
 	 */
-	public void move(float dx, float dy) {
+	public int move(float dx, float dy) {
 		if(!checkCollision(x + dx, y + dy)) {
 			this.x += dx;
 			this.y += dy;
+			return 0;
 		} else {
-			if(!checkCollision(x + dx, y)) {
-				this.x += dx;
-			} 
+			int side = 0;
 			
-			if(!checkCollision(x, y + dy)) {
-				this.y += dy;
-			}
+			if(!checkCollision(x + dx, y)) this.x += dx; 
+			else side++;
+			
+			if(!checkCollision(x, y + dy)) this.y += dy;
+			else side--;
+			
+			return side;
 		}
 	}
 	
@@ -152,6 +166,10 @@ public class EntitySprite {
 		return (float)Math.abs(Math.sqrt((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)));
 	}
 	
+	/**
+	 * Returns the angle to the player in radians.
+	 * @return Angle (float)
+	 */
 	protected float angleToPlayer() {
 		Player p = world.getPlayer();
 		return (float)Math.atan2(p.y - y, p.x - x);
@@ -168,7 +186,7 @@ public class EntitySprite {
 			if(sources[i].timeSinceUsed > sources[sourceNumber].timeSinceUsed) sourceNumber = i;
 		}
 		
-		if(pitchChange) sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.2f);
+		if(pitchChange) sources[sourceNumber].setPitch(Constants.ENTITYSPRITE_RAND_PITCH_MAX - random.nextFloat() * (Constants.ENTITYSPRITE_RAND_PITCH_MAX - Constants.ENTITYSPRITE_RAND_PITCH_MIN));
 		sources[sourceNumber].play(buffer);
 	}
 	
@@ -185,7 +203,7 @@ public class EntitySprite {
 		}
 		
 		sources[sourceNumber].setGain(gain);
-		if(pitchChange) sources[sourceNumber].setPitch(1.1f - random.nextFloat() * 0.2f);
+		if(pitchChange) sources[sourceNumber].setPitch(Constants.ENTITYSPRITE_RAND_PITCH_MAX - random.nextFloat() * (Constants.ENTITYSPRITE_RAND_PITCH_MAX - Constants.ENTITYSPRITE_RAND_PITCH_MIN));
 		sources[sourceNumber].play(buffer);
 	}
 	
@@ -218,9 +236,15 @@ public class EntitySprite {
 	}
 	
 	public int getRelativeDirection() {
+		//TODO: Optimize
 		if(directional) {
-			float a = angleToPlayer() - lookDirection;
-			int r = (int)Math.round(((a + Math.PI) % (Math.PI * 2)) / (Math.PI / 2)) % 4;
+			float alpha = (float)Math.toDegrees(angleToPlayer());
+			float beta = (float)Math.toDegrees(lookDirection);
+			float a = (float)(Math.abs(beta - alpha)) % 360;
+			float b = a > 180 ? 360 - a : a;
+			int sign = (alpha - beta >= 0 && alpha - beta <= 180) || (alpha - beta <=-180 && alpha - beta>= -360) ? 1 : -1; 
+			float f = (sign == -1 ? 180 + (180 - b) : b);
+			int r = Math.round(f / 360 * sprites.length) % sprites.length;
 			return r;
 		}
 		return 0;

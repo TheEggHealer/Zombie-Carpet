@@ -3,14 +3,14 @@ package com.zurragamez.src.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.zurragamez.src.resources.Sprite;
+import com.zurragamez.src.utils.Constants;
 
 public class EntityMonster extends EntitySprite {
 
-	public float health = 100;
+	public float health = Constants.MONSTER_HEALTH;
 	
 	protected boolean ai_roam, ai_followPlayer;
-	protected boolean sound_living, sound_hurt, dead, sound_walk;
+	protected boolean has_sound_living, has_sound_hurt, dead, has_sound_walk;
 	
 	protected float detectionRadius;
 	protected float hitRadius;
@@ -23,7 +23,11 @@ public class EntityMonster extends EntitySprite {
 							soundBuffers_hurt = new ArrayList<Integer>(),
 							soundBuffers_walk = new ArrayList<Integer>();
 	
-	protected int walkCooldown = 10;
+	protected float walkingSpeed = Constants.MONSTER_WALKING_SPEED;
+	protected int walkSoundCooldown = random.nextInt(Constants.MONSTER_RAND_WALK_SOUND_COOLDOWN_MAX);
+	protected int walkTime = random.nextInt(Constants.MONSTER_RAND_WALK_TIME_MAX - Constants.MONSTER_RAND_WALK_TIME_MIN) + Constants.MONSTER_RAND_WALK_TIME_MIN;
+	protected int noiseOffsetX, noiseOffsetY;
+	protected boolean walking = false;
 	
 	public EntityMonster(float x, float y, float scale, boolean onGround) {
 		super(x, y, scale, onGround, true);
@@ -38,7 +42,7 @@ public class EntityMonster extends EntitySprite {
 		
 		if(ai_roam) roam();
 		
-		if(sound_living) {
+		if(has_sound_living) {
 			if(--timeSinceSound <= 0) {
 				timeSinceSound = minTimeSinceSound + random.nextInt(maxTimeSinceSound - minTimeSinceSound);
 				
@@ -47,17 +51,20 @@ public class EntityMonster extends EntitySprite {
 		}
 	}
 	
-	public void move(float dx, float dy) {
+	public int move(float dx, float dy) {
 		if(!dead) {			
-			super.move(dx, dy);
+			int r = super.move(dx, dy);
 			
-			if(sound_walk) {
-				if(--walkCooldown <= 0) {
-					walkCooldown = 35;
+			if(has_sound_walk) {
+				if(--walkSoundCooldown <= 0) {
+					walkSoundCooldown = Constants.MONSTER_WALK_SOUND_COOLDOWN;
 					playSound(getSoundWalk(), true);
-	;			}
+				}
 			}
+			return r;
 		}
+		
+		return 2;
 	}
 	
 	public void updateNear() {
@@ -77,7 +84,7 @@ public class EntityMonster extends EntitySprite {
 				playSound(sound_death, true);
 				ai_followPlayer = false;
 				ai_roam = false;
-				sound_living = false;
+				has_sound_living = false;
 				
 				dead = true;
 				die();
@@ -96,7 +103,21 @@ public class EntityMonster extends EntitySprite {
 	 * AI that automatically moves the entity at random.
 	 */
 	public void roam() {
-		//TODO: Add roaming ai.
+		walkTime--;
+		if(walkTime < 0) {
+			walking = !walking;
+			walkTime = random.nextInt(Constants.MONSTER_RAND_WALK_TIME_MAX - Constants.MONSTER_RAND_WALK_TIME_MIN) + Constants.MONSTER_RAND_WALK_TIME_MIN;
+			if(walking) {
+				noiseOffsetX = random.nextInt(500);
+				noiseOffsetY = random.nextInt(500);
+				lookDirection = (float)(random.nextFloat() * Math.PI * 2);
+			}
+		} 
+		if(walking) {
+			this.lookDirection += (float)(noise.eval(x + noiseOffsetX, y + noiseOffsetY)) / 20f;
+			int r = move((float)Math.cos(lookDirection) * walkingSpeed, (float)Math.sin(lookDirection) * walkingSpeed);
+			if(r != 0) lookDirection = (float)(random.nextFloat() * Math.PI * 2);
+		}
 	}
 
 	public float getHitRadius() {

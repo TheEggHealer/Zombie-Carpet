@@ -42,8 +42,9 @@ public class World {
 			map = loadMap("maps/" + mapName + "_walls.txt");
 			floor = loadMap("maps/" + mapName + "_floor.txt");
 			roof = loadMap("maps/" + mapName + "_roof.txt");
+			//TODO: Do not load brightness
 			brightness = loadBrightness("maps/" + mapName + "_brightness.txt");
-//			loadEntities("maps/" + mapName + "_entities.txt");
+			loadEntities("maps/" + mapName + "_entities.txt");
 			
 		} catch (IOException e) {
 			System.err.println("Failed to load map");

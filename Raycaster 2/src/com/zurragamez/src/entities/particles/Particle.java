@@ -3,14 +3,12 @@ package com.zurragamez.src.entities.particles;
 import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;
+import com.zurragamez.src.utils.Constants;
 
 public class Particle extends EntitySprite {
 
-	protected final float GRAVITY_BASE = 0.004f;
-	
 	protected float gravity;
-	protected float velZ = 0;
-	protected float velX, velY;
+	protected float velX, velY, velZ;
 	protected float bounciness;
 	
 	protected int life;
@@ -80,9 +78,16 @@ public class Particle extends EntitySprite {
 		}
 	}
 	
+	/**
+	 * Sets the sprites for the entity. If more than one is given, the entity becomes a 
+	 * directional one and will change sprite depending on the viewing angle from the player. 
+	 * This does however draw more performance.<br><br>
+	 * <i>This method also sets the gravity for the particle, based on the size of the sprites.</i>
+	 * @param sprites You can give this method as many sprites as you want.
+	 */
 	public void initSprites(Sprite... sprites) {
 		super.initSprites(sprites);
-		gravity = GRAVITY_BASE * spriteSize;
+		gravity = Constants.ENTITYPARTICLE_GRAVITY_BASE * spriteSize;
 	}
 	
 }
