@@ -1,6 +1,5 @@
-package com.zurragamez.src.entities;
+package com.zurragamez.src.entities.monsters;
 
-import com.zurragamez.src.Projectile;
 import com.zurragamez.src.entities.particles.ParticleGore;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
@@ -10,7 +9,6 @@ public class Zombie extends EntityMonster {
 	private static final String TAG = "EntitySprite>EntityMonster>Zombie";
 	
 	private Source shootingSource;
-	private int sound_shoot1;
 	
 	public Zombie(float x, float y) {
 		super(x, y, 0.65f, true);
@@ -21,7 +19,6 @@ public class Zombie extends EntityMonster {
 		//TODO: Use sources[] instead
 		shootingSource = new Source(TAG);
 		shootingSource.setLocation(x, y);
-		sound_shoot1 = AudioMaster.player_shoot;
 		
 		ai_roam = true;
 		ai_followPlayer = true;
@@ -49,21 +46,6 @@ public class Zombie extends EntityMonster {
 
 	public void update() {
 		super.update();
-		
-		if(!dead) {
-			float dx = world.getPlayer().x - x;
-			float dy = world.getPlayer().y - y;
-			float dir = (float)Math.atan2(dy, dx);
-			
-			if(1f + random.nextInt(20) == 1) {			
-					shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
-					shootingSource.play(sound_shoot1);
-					
-					world.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
-			}
-
-			move((float)Math.cos(dir) * speed, (float)Math.sin(dir) * speed);
-		}
 	}
 	
 	public void die() {

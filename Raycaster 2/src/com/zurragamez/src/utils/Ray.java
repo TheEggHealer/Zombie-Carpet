@@ -1,7 +1,10 @@
-package com.zurragamez.src;
+package com.zurragamez.src.utils;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+
+import com.zurragamez.src.Main;
+import com.zurragamez.src.World;
 
 public class Ray {
 	

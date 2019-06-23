@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.zurragamez.src.entities.EntitySound;
 import com.zurragamez.src.entities.EntitySprite;
-import com.zurragamez.src.entities.Zombie;
+import com.zurragamez.src.entities.monsters.Zombie;
 import com.zurragamez.src.entities.objects.lights.LightStandingTorch;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;

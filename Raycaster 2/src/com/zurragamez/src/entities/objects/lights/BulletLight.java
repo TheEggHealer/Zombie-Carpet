@@ -1,15 +1,15 @@
 package com.zurragamez.src.entities.objects.lights;
 
-import com.zurragamez.src.Projectile;
 import com.zurragamez.src.entities.particles.ParticleBulletSmoke;
+import com.zurragamez.src.entities.projectiles.EntityProjectile;
 import com.zurragamez.src.resources.Sprite;
 
 public class BulletLight extends Light {
 
 	private int smokeCooldown = 4;
-	private Projectile projectile;
+	private EntityProjectile projectile;
 	
-	public BulletLight(float x, float y, Projectile projectile) {
+	public BulletLight(float x, float y, EntityProjectile projectile) {
 		super(x, y, 0.6f, true, 1, false, Sprite.object_light);
 		this.projectile = projectile;
 		nearRadius = 7;

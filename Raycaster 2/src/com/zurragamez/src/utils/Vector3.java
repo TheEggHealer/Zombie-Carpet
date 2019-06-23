@@ -1,4 +1,4 @@
-package com.zurragamez.src;
+package com.zurragamez.src.utils;
 import java.awt.Color;
 
 public class Vector3 {

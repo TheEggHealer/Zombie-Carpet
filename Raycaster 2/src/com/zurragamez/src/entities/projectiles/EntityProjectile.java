@@ -1,16 +1,17 @@
-package com.zurragamez.src;
+package com.zurragamez.src.entities.projectiles;
 import java.util.Random;
 
+import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySound;
 import com.zurragamez.src.entities.EntitySprite;
-import com.zurragamez.src.entities.Zombie;
+import com.zurragamez.src.entities.monsters.Zombie;
 import com.zurragamez.src.entities.objects.lights.BulletLight;
 import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.entities.particles.ParticleWall;
 import com.zurragamez.src.resources.Sprite;
 import com.zurragamez.src.resources.audio.AudioMaster;
 
-public class Projectile extends EntitySprite {
+public class EntityProjectile extends EntitySprite {
 	
 	private float dir;
 	private float speed;
@@ -20,7 +21,7 @@ public class Projectile extends EntitySprite {
 	
 	private Random random = new Random();
 	
-	public Projectile(float x, float y, float direction, float scale, Sprite sprite) {
+	public EntityProjectile(float x, float y, float direction, float scale, Sprite sprite) {
 		super(x, y, 0.05f, false, false);
 		initSprites(sprite);
 		

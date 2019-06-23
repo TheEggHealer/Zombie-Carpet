@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zurragamez.src.Main;
-import com.zurragamez.src.Ray;
-import com.zurragamez.src.Wall;
 import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.resources.Sprite;

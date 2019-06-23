@@ -1,8 +1,9 @@
-package com.zurragamez.src.entities;
+package com.zurragamez.src.entities.monsters;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.utils.Constants;
 
 public class EntityMonster extends EntitySprite {

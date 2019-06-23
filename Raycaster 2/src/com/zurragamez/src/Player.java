@@ -4,6 +4,7 @@ import java.util.Random;
 import com.zurragamez.src.entities.EntitySprite;
 import com.zurragamez.src.entities.particles.ParticleAmbient;
 import com.zurragamez.src.entities.particles.ParticleBlood;
+import com.zurragamez.src.entities.projectiles.EntityProjectile;
 import com.zurragamez.src.resources.Keyboard;
 import com.zurragamez.src.resources.Mouse;
 import com.zurragamez.src.resources.Sprite;
@@ -63,7 +64,7 @@ public class Player {
 			shootingSource.setPitch(1.1f - random.nextFloat() * 0.4f);
 			shootingSource.play(sound_shoot1);
 			
-			world.addEntity(new Projectile(x, y, dir, 0.2f, Sprite.ammo));
+			world.addEntity(new EntityProjectile(x, y, dir, 0.2f, Sprite.ammo));
 		}
 		
 		if(--ambientParticleCooldown <= 0) {
