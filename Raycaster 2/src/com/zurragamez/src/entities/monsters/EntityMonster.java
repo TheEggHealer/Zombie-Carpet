@@ -111,13 +111,13 @@ public class EntityMonster extends EntitySprite {
 			if(walking) {
 				noiseOffsetX = random.nextInt(500);
 				noiseOffsetY = random.nextInt(500);
-				lookDirection = (float)(random.nextFloat() * Math.PI * 2);
+				direction = (float)(random.nextFloat() * Math.PI * 2);
 			}
 		} 
 		if(walking) {
-			this.lookDirection += (float)(noise.eval(x + noiseOffsetX, y + noiseOffsetY)) / 20f;
-			int r = move((float)Math.cos(lookDirection) * walkingSpeed, (float)Math.sin(lookDirection) * walkingSpeed);
-			if(r != 0) lookDirection = (float)(random.nextFloat() * Math.PI * 2);
+			this.direction += (float)(noise.eval(x + noiseOffsetX, y + noiseOffsetY)) / 20f;
+			int r = move((float)Math.cos(direction) * walkingSpeed, (float)Math.sin(direction) * walkingSpeed);
+			if(r != 0) direction = (float)(random.nextFloat() * Math.PI * 2);
 		}
 	}
 

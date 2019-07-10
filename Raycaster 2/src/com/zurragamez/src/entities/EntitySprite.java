@@ -26,7 +26,7 @@ public class EntitySprite {
 	protected static OpenSimplexNoise noise = new OpenSimplexNoise();
 	
 	protected boolean directional = true;
-	protected float lookDirection;
+	protected float direction;
 	protected Sprite[] sprites;
 	protected int spriteSize;
 	
@@ -71,8 +71,11 @@ public class EntitySprite {
 	}
 	
 	public void setSources(int amount) {
+		this.hasSound = true;
 		for(Source source : sources) {
-			source.delete();
+			if(source != null) {
+				source.delete();
+			}
 		}
 		
 		for(int i = 0; i < AMOUNT_OF_SOURCES; i++) {
@@ -87,7 +90,9 @@ public class EntitySprite {
 	public void remove() {
 		if(hasSound) {
 			for(Source source : sources) {
-				source.delete();
+				if(source != null) {
+					source.delete();
+				}
 			}
 		}
 		remove = true;
@@ -239,7 +244,7 @@ public class EntitySprite {
 		//TODO: Optimize
 		if(directional) {
 			float alpha = (float)Math.toDegrees(angleToPlayer());
-			float beta = (float)Math.toDegrees(lookDirection);
+			float beta = (float)Math.toDegrees(direction);
 			float a = (float)(Math.abs(beta - alpha)) % 360;
 			float b = a > 180 ? 360 - a : a;
 			int sign = (alpha - beta >= 0 && alpha - beta <= 180) || (alpha - beta <=-180 && alpha - beta>= -360) ? 1 : -1; 

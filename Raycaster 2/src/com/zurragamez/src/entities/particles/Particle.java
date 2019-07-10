@@ -24,7 +24,7 @@ public class Particle extends EntitySprite {
 
 	public void update() {
 		checkCollision();
-		if(--life <= 0) remove = true;
+		if(--life <= 0) remove();
 		
 		this.x += velX;
 		this.y += velY;
@@ -51,7 +51,7 @@ public class Particle extends EntitySprite {
 			velZ *= -bounciness;
 		}
 
-		if(!world.isWorldCoordinates(x, y)) remove = true;
+		if(!world.isWorldCoordinates(x, y)) remove();
 	}
 	
 	public void checkCollision() {

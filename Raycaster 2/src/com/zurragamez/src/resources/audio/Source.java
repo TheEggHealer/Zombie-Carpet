@@ -7,7 +7,7 @@ import com.zurragamez.src.Main;
 public class Source {
 	private static final String TAG = "Source";
 
-	private int sourceId;
+	public int sourceId;
 	public int timeSinceUsed = 0;
 	
 	public Source(String tag) {

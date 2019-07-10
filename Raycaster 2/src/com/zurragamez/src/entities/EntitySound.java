@@ -1,5 +1,6 @@
 package com.zurragamez.src.entities;
 
+import com.zurragamez.src.Main;
 import com.zurragamez.src.resources.audio.Source;
 
 public class EntitySound {
@@ -26,6 +27,7 @@ public class EntitySound {
 			remove = true;
 			source.stop();
 			source.delete();
+			Main.printDebug(TAG, "Cleared sound: " + source.sourceId);
 		}
 	}
 }

@@ -1,6 +1,4 @@
 package com.zurragamez.src.entities.projectiles;
-import java.util.Random;
-
 import com.zurragamez.src.World;
 import com.zurragamez.src.entities.EntitySound;
 import com.zurragamez.src.entities.EntitySprite;
@@ -9,29 +7,22 @@ import com.zurragamez.src.entities.objects.lights.BulletLight;
 import com.zurragamez.src.entities.particles.ParticleBlood;
 import com.zurragamez.src.entities.particles.ParticleWall;
 import com.zurragamez.src.resources.Sprite;
-import com.zurragamez.src.resources.audio.AudioMaster;
 
 public class EntityProjectile extends EntitySprite {
 	
-	private float dir;
-	private float speed;
-	private float heightChange;
-	private int soundID;
-	private BulletLight bulletLight;
+	protected float speed;
+	protected float velZ;
+	protected int shootSound, hitSound;
+	protected BulletLight bulletLight;
 	
-	private Random random = new Random();
-	
-	public EntityProjectile(float x, float y, float direction, float scale, Sprite sprite) {
+	public EntityProjectile(float x, float y, float dir, float spread, float scale, Sprite sprite) {
 		super(x, y, 0.05f, false, false);
 		initSprites(sprite);
 		
-		this.dir = direction + (random.nextFloat()-0.5f) * 0.04f;
-		this.speed = 0.2f;
-		soundID = AudioMaster.walk_01;
+		direction = dir + (random.nextFloat()-0.5f) * spread;
+		velZ = random.nextFloat() * spread;
 		
 		hoverHeight = 10;
-		heightChange = random.nextFloat() * 2f - 1;
-		
 		disableFog = false;
 	}
 	
@@ -39,24 +30,31 @@ public class EntityProjectile extends EntitySprite {
 		super.init(world);
 		bulletLight = new BulletLight(x,y, this);
 		bulletLight.init(world);
+		world.addSound(new EntitySound(x, y, shootSound));
+	}
+	
+	public void setSounds(int shootSound, int hitSound) {
+		this.hitSound = hitSound;
+		this.shootSound = shootSound;
 	}
 	
 	public void update() {
-		x += Math.cos(dir) * speed;
-		y += Math.sin(dir) * speed;
+		super.update();
+		x += Math.cos(direction) * speed;
+		y += Math.sin(direction) * speed;
 		
-		hoverHeight -= heightChange;
+		hoverHeight -= velZ;
 		
-		if(!world.isWorldCoordinates(x, y)) remove = true;
+		if(!world.isWorldCoordinates(x, y)) remove();
 
 		if(World.map[(int)(x)][(int)(y)] != 0) {
 			for(int i = 0; i < 1; i++) {
 				if(distanceToPlayer() <= 10) {
-					world.addEntity(new ParticleWall((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), World.map[(int)(x)][(int)(y)]));
-					world.addSound(new EntitySound((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed), soundID));
+					world.addEntity(new ParticleWall((float)(x - Math.cos (direction) * speed), (float)(y - Math.sin(direction) * speed), World.map[(int)(x)][(int)(y)]));
+					world.addSound(new EntitySound((float)(x - Math.cos (direction) * speed), (float)(y - Math.sin(direction) * speed), hitSound));
 				}
 			}
-			remove = true;
+			remove();
 		}
 		
 		bulletLight.update();
@@ -68,9 +66,9 @@ public class EntityProjectile extends EntitySprite {
 				if(distance(z) <= z.getHitRadius()) {
 					z.hurt(10);
 					for(int a = 0; a < 10; a++) {
-						world.addEntity(new ParticleBlood((float)(x - Math.cos (dir) * speed), (float)(y - Math.sin(dir) * speed)));
+						world.addEntity(new ParticleBlood((float)(x - Math.cos (direction) * speed), (float)(y - Math.sin(direction) * speed)));
 					}
-					remove = true;
+					remove();
 				}
 			}
 		}
